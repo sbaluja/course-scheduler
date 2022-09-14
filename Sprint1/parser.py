@@ -19,10 +19,27 @@ if __name__ == '__main__':
         html_lines = html_file.readlines()
 
         # write the relevant parsed line into the text file
+        lineList = []
         for one_line in html_lines:
             one_line = remove_html_tags(one_line)
             if one_line is not None and len(one_line) >  1:
-                courses.write(remove_html_tags(one_line))
+                #courses.write(remove_html_tags(one_line))
+                lineList.append(one_line)
 
+        print(lineList)
+
+        #for i in range(0,len(lineList),12):
+        print(lineList[0])
+        print(lineList[1])
+        print(lineList[2])
+        print(lineList[3])
+        print(lineList[4])
+        print(lineList[5])
+        print(lineList[6])
+        print(lineList[7])
+        print(lineList[8])
+        print(lineList[9])
+        print(lineList[10])
+        print(lineList[11])
 
 
