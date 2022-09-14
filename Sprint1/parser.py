@@ -1,11 +1,16 @@
 import re
+import json
 
 # removes html tags from a line of text
 def remove_html_tags(text):
-    if "<input type=\"hidden" not in text or "<p id=" in text or "id=\"SEC_SHORT_TITLE_1" in text:
-        text = re.sub('<.*?>', '', text)
-        text = text.replace("\">", '')
-        return text
+    if "<input type=\"hidden" not in text and text[0] == '<' and "<td class=\"windowIdx\"" not in text:
+        if "<div class=\"meet\">" in text or "<p id=\"LIST_VAR5_1369\">" in text:
+            return "No data found"
+        else:
+            text = re.sub('<.*?>', '', text)
+            text = text.replace("\">", '')
+            text = text.replace("\n", "")
+            return text
     else:
         return None
 
@@ -18,28 +23,34 @@ if __name__ == '__main__':
             next(html_file)
         html_lines = html_file.readlines()
 
-        # write the relevant parsed line into the text file
+        # append the relevant parsed line into the list
+        incoming_error = False
         lineList = []
         for one_line in html_lines:
             one_line = remove_html_tags(one_line)
             if one_line is not None and len(one_line) >  1:
-                #courses.write(remove_html_tags(one_line))
                 lineList.append(one_line)
 
-        print(lineList)
+        course_list = []
+        for i in range(0,len(lineList)-9,9):
 
-        #for i in range(0,len(lineList),12):
-        print(lineList[0])
-        print(lineList[1])
-        print(lineList[2])
-        print(lineList[3])
-        print(lineList[4])
-        print(lineList[5])
-        print(lineList[6])
-        print(lineList[7])
-        print(lineList[8])
-        print(lineList[9])
-        print(lineList[10])
-        print(lineList[11])
+            course_list.append({
+                'Term': lineList[i],
+                'Status': lineList[i+1],
+                'Name': lineList[i+2],
+                'Location': lineList[i+3],
+                'Meeting': lineList[i+4],
+                'Faculty': lineList[i+5],
+                'Capacity': lineList[i+6],
+                'Credits': lineList[i+7],
+                'Level': lineList[i+8]
+            })
+
+    with open('courses.json', 'w') as json_file:
+        json.dump(course_list, json_file, indent=2)
+
+
+
+
 
 
