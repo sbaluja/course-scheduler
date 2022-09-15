@@ -1,0 +1,43 @@
+import json
+from operator import contains
+
+def displayCourse(course):
+    print(course)
+
+def displayCourseList(courseList):
+    for course in courseList:
+        displayCourse(course)
+
+def search(courseData, query):
+    for course in courseData:
+        if query in course['Name'].lower().replace("*", "") or query in course['Faculty'].lower():
+            displayCourse(course)
+
+def readFile(filename):
+    file = open (filename, "r")
+    courseData = json.load(file)
+    return courseData
+
+
+courseData = readFile("courses.json")
+
+print("*" * 70)
+print("Welcome to the command line interface for course searching")
+userInput = ""
+while (userInput != "exit"):
+    print()
+    userInput = input("Select one of the options: search/filter/exit\n").lower()
+    if (userInput == "search"):
+        userInput = input("Enter search query:\n").lower()
+        print("\n **RESULTS**\n")
+        search(courseData, userInput.replace("*", ""))
+    elif (userInput == "exit"):
+        break
+    else:
+        print("Invalid Command")
+
+
+print("*" * 70)
+print("EXITING...")
+
+        
