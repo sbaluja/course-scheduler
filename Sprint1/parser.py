@@ -15,7 +15,6 @@ def remove_html_tags(text):
         return None
 
 if __name__ == '__main__':
-    courses = open("courses.txt", "w+")
     with open("Section Selection Results WebAdvisor University of Guelph.html", "r") as html_file:
 
         # start reading from line 108
