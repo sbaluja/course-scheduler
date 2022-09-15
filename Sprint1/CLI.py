@@ -1,9 +1,11 @@
 import json
 from operator import contains
 
+#to display a singular course
 def displayCourse(course):
     print(course)
 
+#to display a list of courses (filtering)
 def displayCourseList(courseList):
     for course in courseList:
         displayCourse(course)
@@ -18,6 +20,10 @@ def readFile(filename):
     courseData = json.load(file)
     return courseData
 
+#do user input for what kind of filtering, and then probabaly call the specific filtering functions and display the entire list w disaplYCourseList
+def filterQuery(courseData):
+    pass
+
 
 courseData = readFile("courses.json")
 
@@ -31,6 +37,8 @@ while (userInput != "exit"):
         userInput = input("Enter search query:\n").lower()
         print("\n **RESULTS**\n")
         search(courseData, userInput.replace("*", ""))
+    elif (userInput == "filter"):
+        filterQuery(courseData)
     elif (userInput == "exit"):
         break
     else:
