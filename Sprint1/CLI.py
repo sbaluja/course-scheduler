@@ -72,9 +72,9 @@ def addValue(dict, key, value):
     if key not in dict:
         dict[key] = value
     elif isinstance(dict[key], list):
-        dict[key].append(value)
+        if (value not in dict[key]): dict[key].append(value)
     else:
-        dict[key] = [dict[key], value]
+        if (value not in dict[key]): dict[key] = [dict[key], value]
 
 def filterStatus(filterData, status):
     newData = []
