@@ -5,7 +5,10 @@ from operator import contains
 #to display a singular course
 def displayCourse(course):
     # print(course)
-    print(f"Term: {course['Term']}")
+    if course['Status'] == "Open":
+        print(f"\033[0;33;40m Term: {course['Term']}")
+    else:
+        print(f"\033[0;31;40m Term: {course['Term']}")
     print(f"Status: {course['Status']}")
     print(f"Name: {course['Name']}")
     print(f"Location: {course['Location']}")
@@ -14,12 +17,12 @@ def displayCourse(course):
     print(f"Capacity: {course['Capacity']}")
     print(f"Credits: {course['Credits']}")
     print(f"Level: {course['Level']}")
-    print("*" * 70)
+    print("\033[0;37;40m*" * 70)
 
 
 #to display a list of courses (filtering)
-def displayCourseList(courseList):
-    for course in courseList:
+def displayCourseList(filterData):
+    for course in filterData:
         displayCourse(course)
 
 def search(courseData, query):
@@ -32,7 +35,7 @@ def readFile(filename):
     courseData = json.load(file)
     return courseData
 
-def displayFilterOpts():
+def displayFilterOpts(filterList):
     print()
     print("      Filter Options      ")
     print("-" * 26)
@@ -41,33 +44,58 @@ def displayFilterOpts():
     print("| \tFaculty\t\t |")
     print("| \tCredits\t\t |")
     print("| \tLevel\t\t |")
+    print("| \tReset\t\t |")
     print("| \tBack\t\t |")
     print("| \tExit\t\t |")
     print("-" * 26)
-    print()
+    print("Chosen Filters: ")
+    if len(filterList) == 0:
+        print("None")
+        print()
+    else:
+        for key, value in filterList.items():
+            print("{:<10} {:<10}".format(key, ', '.join(value) if (isinstance(value, list)) else value))
+        print()
 
-def filterStatus(courseData, status):
-    for course in courseData:
+def addValue(dict, key, value):
+    if key not in dict:
+        dict[key] = value
+    elif isinstance(dict[key], list):
+        dict[key].append(value)
+    else:
+        dict[key] = [dict[key], value]
+
+def filterStatus(filterData, status):
+    newData = []
+    for course in filterData:
         if status == course['Status'].lower():
+            newData.append(course)
             displayCourse(course)
+    return newData
 
-def filterFaculty(courseData, faculty):
-    for course in courseData:
+def filterFaculty(filterData, faculty):
+    newData = []
+    for course in filterData:
         if faculty in course['Faculty'].lower():
+            newData.append(course)
             displayCourse(course)
+    return newData
 
-def filterName(courseData, name):
-    for course in courseData:
+def filterName(filterData, name):
+    newData = []
+    for course in filterData:
         if course['Name'].lower().replace("*", "").startswith(name):
+            newData.append(course)
             displayCourse(course)
+    return newData
 
-def filterLevel(courseData, level):
-    for course in courseData:
+def filterLevel(filterData, level):
+    for course in filterData:
         if level == course['Level'].lower():
             displayCourse(course)
 
-def filterCredits(courseData, numCredits):
-    for course in courseData:
+def filterCredits(filterData, numCredits):
+    for course in filterData:
         if float(numCredits) == float(course['Credits']):
             displayCourse(course)
 
@@ -77,8 +105,10 @@ def closeCLI():
     sys.exit()
 
 courseData = readFile("courses.json")
+filterData = courseData
 userInput = ""
 filterOption = ""
+filterList = {}
 statusOption = ""
 nameOption = ""
 levelOption = ""
@@ -98,15 +128,18 @@ while (userInput != "exit"):
     
     elif (userInput == "filter"):
 
+        filterData = courseData
         while (filterOption != "exit"):
-            displayFilterOpts()
+            displayFilterOpts(filterList)
             filterOption = input("Enter a filter option: ").lower()
 
             if (filterOption == "status"):
                 while (statusOption != "exit"):
                     statusOption = input("Enter a status option to filter by (open/closed): ").lower()
+                    print()
                     if (statusOption == "open" or statusOption == "closed"):
-                        filterStatus(courseData, statusOption)
+                        filterData = filterStatus(filterData, statusOption)
+                        addValue(filterList, filterOption, statusOption)
                         break
                     elif (statusOption == "exit"):
                         closeCLI()
@@ -117,30 +150,36 @@ while (userInput != "exit"):
             elif (filterOption == "name"):
                 while (nameOption != "exit"):
                     nameOption = input("Enter a name to filter by (e.g. ACCT*1220): ").lower().replace("*", "")
+                    print()
                     if (nameOption == "exit"):
                         closeCLI()
                     else:
-                        filterName(courseData, nameOption)
+                        filterData = filterName(filterData, nameOption)
+                        addValue(filterList, filterOption, nameOption)
                         break
 
             elif (filterOption == "faculty"):
                 while (facultyOption != "exit"):
                     facultyOption = input("Enter a faculty to filter by (e.g. Lassou): ").lower()
+                    print()
                     if (facultyOption == "exit"):
                         closeCLI()
                     else:
-                        filterFaculty(courseData, facultyOption)
+                        filterData = filterFaculty(filterData, facultyOption)
+                        addValue(filterList, filterOption, facultyOption)
                         break
 
             elif (filterOption == "credits"):
                 while (creditsOption != "exit"):
                     creditsOption = input("Enter number of credits to filter by (e.g. 0.50): ")
+                    print()
                     if (creditsOption == "exit"):
                         closeCLI()
                     else:
                         try:
                             numCredits = float(creditsOption)
-                            filterCredits(courseData, creditsOption)
+                            filterCredits(filterData, creditsOption)
+                            addValue(filterList, filterOption, creditsOption)
                         except:
                             print("Invalid credits option\n")
                             creditsOption = ""
@@ -149,14 +188,20 @@ while (userInput != "exit"):
             elif (filterOption == "level"):
                 while (levelOption != "exit"):
                     levelOption = input("Enter a level option (undergraduate/graduate): ").lower()
+                    print()
                     if (levelOption == "undergraduate" or levelOption == "graduate"):
-                        filterLevel(courseData, levelOption)
+                        filterLevel(filterData, levelOption)
+                        addValue(filterList, filterOption, levelOption)
                         break
                     elif (levelOption == "exit"):
                         closeCLI()
                     else:
                         print("Invalid level option\n")
                         levelOption = ""
+
+            elif  (filterOption == "reset"):
+                filterData = courseData
+                filterList = {}
 
             elif (filterOption == "back"):
                 filterOption = ""
