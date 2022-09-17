@@ -6,9 +6,9 @@ from operator import contains
 def displayCourse(course):
     # print(course)
     if course['Status'] == "Open":
-        print(f"\033[0;33;40m Term: {course['Term']}")
+        print(f"\033[0;33;40mTerm: {course['Term']}")
     else:
-        print(f"\033[0;31;40m Term: {course['Term']}")
+        print(f"\033[0;31;40mTerm: {course['Term']}")
     print(f"Status: {course['Status']}")
     print(f"Name: {course['Name']}")
     print(f"Location: {course['Location']}")
@@ -205,6 +205,8 @@ while (userInput != "exit"):
 
             elif (filterOption == "back"):
                 filterOption = ""
+                filterData = courseData
+                filterList = {}
                 break
 
             elif (filterOption == "exit"):
