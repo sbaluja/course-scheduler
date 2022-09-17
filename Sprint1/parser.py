@@ -15,7 +15,7 @@ def remove_html_tags(text):
         return None
 
 if __name__ == '__main__':
-    with open("Sprint1\Section Selection Results WebAdvisor University of Guelph.html", "r") as html_file:
+    with open("Section Selection Results WebAdvisor University of Guelph.html", "r") as html_file:
 
         # start reading from line 108
         for i in range(107):
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 'Level': lineList[i+8]
             })
 
-    with open('Sprint1\courses.json', 'w') as json_file:
+    with open('courses.json', 'w') as json_file:
         json.dump(course_list, json_file, indent=2)
 
 
