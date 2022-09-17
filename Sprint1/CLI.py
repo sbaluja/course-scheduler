@@ -12,7 +12,7 @@ def displayCourse(course):
     print(f"Status: {course['Status']}")
     print(f"Name: {course['Name']}")
     print(f"Location: {course['Location']}")
-    print(f"Meeting: {course['Meeting']}")
+    print(f"Meeting: {parseMeeting(course['Meeting'])}")
     print(f"Faculty: {course['Faculty']}")
     print(f"Capacity: {course['Capacity']}")
     print(f"Credits: {course['Credits']}")
@@ -33,8 +33,33 @@ def displayCourseList(filterData):
             numCourses = 0
 
 def parseMeeting(meeting):
-    keywords = ["TBA", "LEC", "LAB", "EXAM"]
-    
+
+    keywords = ["LEC", "LAB", "EXAM"]
+    for key in keywords:
+        if key in meeting:
+            if meeting.startswith(key):
+                meeting = meeting.replace(key, f"{key}: ")
+            else:
+                meeting = meeting.replace(key, f" | {key}: ")
+
+    if "TBA" in meeting:
+        meeting = meeting.replace("TBA", f"TBA | ")
+        meeting = meeting[:-2]
+        meeting = meeting.replace("|  |", "|")
+
+    if ")R" in meeting:
+        meeting = meeting.replace(")R", ") R")
+
+    # times = ["AM", "PM"]
+    # for time in times:
+    #     if time in meeting and meeting[meeting.index(time)-1] != 'X':
+    #         meeting = meeting.replace(time, f" {time} ", 1)
+
+    for i in range(len(meeting)-1):
+        if meeting[i].isalpha() and meeting[i+1].isdigit():
+            meeting = meeting[:i+1] + ' ' + meeting[i+1:]
+
+    return meeting
 
 def search(courseData, query):
     for course in courseData:

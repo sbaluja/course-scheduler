@@ -7,7 +7,7 @@ def remove_html_tags(text):
         if "<div class=\"meet\">" in text or "<p id=\"LIST_VAR5_1369\">" in text:
             return "No data found"
         else:
-            text = re.sub('<.*?>', '', text)
+            text = re.sub('<.*?>', ' ', text)
             text = text.replace("\">", '')
             text = text.replace("\n", "")
             return text
