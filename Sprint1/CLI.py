@@ -6,9 +6,9 @@ from operator import contains
 def displayCourse(course):
     # print(course)
     if course['Status'] == "Open":
-        print(f"\033[0;33;40mTerm: {course['Term']}")
+        print(f"\033[0;33;49mTerm: {course['Term']}")
     else:
-        print(f"\033[0;31;40mTerm: {course['Term']}")
+        print(f"\033[0;31;49mTerm: {course['Term']}")
     print(f"Status: {course['Status']}")
     print(f"Name: {course['Name']}")
     print(f"Location: {course['Location']}")
@@ -17,13 +17,24 @@ def displayCourse(course):
     print(f"Capacity: {course['Capacity']}")
     print(f"Credits: {course['Credits']}")
     print(f"Level: {course['Level']}")
-    print("\033[0;37;40m*" * 70)
+    print("\033[0;37;49m*" * 70)
 
 
 #to display a list of courses (filtering)
 def displayCourseList(filterData):
+    numCourses = 0
+    pageView = True
     for course in filterData:
         displayCourse(course)
+        numCourses += 1
+        if numCourses == 5 and pageView:
+            pageInput = input("Press Enter to continue or type 'Finish' to complete list... ").lower()
+            if pageInput == "finish": pageView = False
+            numCourses = 0
+
+def parseMeeting(meeting):
+    keywords = ["TBA", "LEC", "LAB", "EXAM"]
+    
 
 def search(courseData, query):
     for course in courseData:
@@ -70,7 +81,6 @@ def filterStatus(filterData, status):
     for course in filterData:
         if status == course['Status'].lower():
             newData.append(course)
-            displayCourse(course)
     return newData
 
 def filterFaculty(filterData, faculty):
@@ -78,26 +88,28 @@ def filterFaculty(filterData, faculty):
     for course in filterData:
         if faculty in course['Faculty'].lower():
             newData.append(course)
-            displayCourse(course)
     return newData
 
 def filterName(filterData, name):
     newData = []
     for course in filterData:
-        if course['Name'].lower().replace("*", "").startswith(name):
+        if name in course['Name'].lower().replace("*", ""):
             newData.append(course)
-            displayCourse(course)
     return newData
 
 def filterLevel(filterData, level):
+    newData = []
     for course in filterData:
         if level == course['Level'].lower():
-            displayCourse(course)
+            newData.append(course)
+    return newData
 
 def filterCredits(filterData, numCredits):
+    newData = []
     for course in filterData:
         if float(numCredits) == float(course['Credits']):
-            displayCourse(course)
+            newData.append(course)
+    return newData
 
 def closeCLI():
     print("*" * 70)
@@ -139,6 +151,7 @@ while (userInput != "exit"):
                     print()
                     if (statusOption == "open" or statusOption == "closed"):
                         filterData = filterStatus(filterData, statusOption)
+                        displayCourseList(filterData)
                         addValue(filterList, filterOption, statusOption)
                         break
                     elif (statusOption == "exit"):
@@ -155,6 +168,7 @@ while (userInput != "exit"):
                         closeCLI()
                     else:
                         filterData = filterName(filterData, nameOption)
+                        displayCourseList(filterData)
                         addValue(filterList, filterOption, nameOption)
                         break
 
@@ -166,6 +180,7 @@ while (userInput != "exit"):
                         closeCLI()
                     else:
                         filterData = filterFaculty(filterData, facultyOption)
+                        displayCourseList(filterData)
                         addValue(filterList, filterOption, facultyOption)
                         break
 
@@ -178,7 +193,8 @@ while (userInput != "exit"):
                     else:
                         try:
                             numCredits = float(creditsOption)
-                            filterCredits(filterData, creditsOption)
+                            filterData = filterCredits(filterData, creditsOption)
+                            displayCourseList(filterData)
                             addValue(filterList, filterOption, creditsOption)
                         except:
                             print("Invalid credits option\n")
@@ -190,7 +206,8 @@ while (userInput != "exit"):
                     levelOption = input("Enter a level option (undergraduate/graduate): ").lower()
                     print()
                     if (levelOption == "undergraduate" or levelOption == "graduate"):
-                        filterLevel(filterData, levelOption)
+                        filterData = filterLevel(filterData, levelOption)
+                        displayCourseList(filterData)
                         addValue(filterList, filterOption, levelOption)
                         break
                     elif (levelOption == "exit"):
