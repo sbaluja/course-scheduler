@@ -4,7 +4,18 @@ from operator import contains
 
 #to display a singular course
 def displayCourse(course):
-    print(course)
+    # print(course)
+    print(f"Term: {course['Term']}")
+    print(f"Status: {course['Status']}")
+    print(f"Name: {course['Name']}")
+    print(f"Location: {course['Location']}")
+    print(f"Meeting: {course['Meeting']}")
+    print(f"Faculty: {course['Faculty']}")
+    print(f"Capacity: {course['Capacity']}")
+    print(f"Credits: {course['Credits']}")
+    print(f"Level: {course['Level']}")
+    print("*" * 70)
+
 
 #to display a list of courses (filtering)
 def displayCourseList(courseList):
