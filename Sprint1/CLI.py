@@ -158,12 +158,12 @@ def sort(courseData, value):
     sortOption = ""
 
     while (sortFlag != "yes" and sortFlag != "no"):
-            sortFlag = input("Do you want the data sorted? (yes/no)\n").lower()
+            sortFlag = input("Do you want the data sorted? (yes/no): ").lower()
             if (sortFlag != "yes" and sortFlag != "no"):
                 print("Invalid response\n")
 
     while (sortOption != "ascending" and sortOption != "descending" and sortFlag == "yes"):
-        sortOption = input("Do you want to sort by ascending or descending order?\n").lower()
+        sortOption = input("Do you want to sort by ascending or descending order?: ").lower()
         if (sortOption == "ascending" or sortOption == "descending"):
             courseData = sortCourses(courseData, sortOption, value)
         else:
@@ -192,12 +192,11 @@ while (userInput != "exit"):
     filterData = courseData
 
     print()
-    userInput = input("Select one of the options: search/filter/exit\n").lower()
+    userInput = input("Select one of the options (search/filter/exit): ").lower()
+    
     if (userInput == "search"):
-        userInput = input("Enter search query:\n").lower()
-
+        userInput = input("Enter search query: ").lower()
         courseData = sort(courseData, "Name")
-
         print("\n **RESULTS**\n")
         search(courseData, userInput.replace("*", ""))
     
@@ -211,7 +210,6 @@ while (userInput != "exit"):
             if (filterOption == "status"):
                 while (statusOption != "exit"):
                     statusOption = input("Enter a status option to filter by (open/closed): ").lower()
-                    print()
                     if (statusOption == "open" or statusOption == "closed"):
                         filterData = sort(courseData, "Name")
                         filterData = filterStatus(filterData, statusOption)
@@ -226,8 +224,7 @@ while (userInput != "exit"):
 
             elif (filterOption == "name"):
                 while (nameOption != "exit"):
-                    nameOption = input("Enter a name to filter by (e.g. ACCT*1220): ").lower().replace("*", "")
-                    print()
+                    nameOption = input("Enter a name to filter by (e.g. ACCT*1220 or ACCT): ").lower().replace("*", "")
                     if (nameOption == "exit"):
                         closeCLI()
                     else:
@@ -240,7 +237,6 @@ while (userInput != "exit"):
             elif (filterOption == "faculty"):
                 while (facultyOption != "exit"):
                     facultyOption = input("Enter a faculty to filter by (e.g. Lassou): ").lower()
-                    print()
                     if (facultyOption == "exit"):
                         closeCLI()
                     else:
@@ -253,7 +249,6 @@ while (userInput != "exit"):
             elif (filterOption == "credits"):
                 while (creditsOption != "exit"):
                     creditsOption = input("Enter number of credits to filter by (e.g. 0.50): ")
-                    print()
                     if (creditsOption == "exit"):
                         closeCLI()
                     else:
@@ -271,7 +266,6 @@ while (userInput != "exit"):
             elif (filterOption == "level"):
                 while (levelOption != "exit"):
                     levelOption = input("Enter a level option (undergraduate/graduate): ").lower()
-                    print()
                     if (levelOption == "undergraduate" or levelOption == "graduate"):
                         filterData = sort(courseData, "Name")
                         filterData = filterLevel(filterData, levelOption)
@@ -301,9 +295,6 @@ while (userInput != "exit"):
                 print("Invalid filter option\n")
                 filterOption = ""
         
-    elif (userInput == "sort"):
-        break
-
     elif (userInput == "exit"):
         closeCLI()
         
