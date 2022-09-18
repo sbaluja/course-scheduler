@@ -62,6 +62,7 @@ def parseMeeting(meeting):
     return meeting
 
 def search(courseData, query):
+    
     for course in courseData:
         if query in course['Name'].lower().replace("*", "") or query in course['Faculty'].lower():
             displayCourse(course)
@@ -141,8 +142,36 @@ def closeCLI():
     print("EXITING...")
     sys.exit()
 
+def sortCourses(sortData, sortOption, value):
+    # Parameters -> List of courses, ascending or descending
+    sorted_search = []
+
+    if (sortOption == "descending"):
+        sorted_search = sorted(sortData, key=lambda x: x[value], reverse=True)
+    else:
+        sorted_search = sorted(sortData, key=lambda x: x[value], reverse=False)
+
+    return sorted_search
+
+def sort(courseData, value):
+    sortFlag = ""
+    sortOption = ""
+
+    while (sortFlag != "yes" and sortFlag != "no"):
+            sortFlag = input("Do you want the data sorted? (yes/no)\n").lower()
+            if (sortFlag != "yes" and sortFlag != "no"):
+                print("Invalid response\n")
+
+    while (sortOption != "ascending" and sortOption != "descending" and sortFlag == "yes"):
+        sortOption = input("Do you want to sort by ascending or descending order?\n").lower()
+        if (sortOption == "ascending" or sortOption == "descending"):
+            courseData = sortCourses(courseData, sortOption, value)
+        else:
+            print("Invalid sort option\n")
+    
+    return courseData
+
 courseData = readFile("courses.json")
-filterData = courseData
 userInput = ""
 filterOption = ""
 filterList = {}
@@ -156,10 +185,19 @@ print("*" * 70)
 print("Welcome to the command line interface for course searching")
 
 while (userInput != "exit"):
+    # Resetting flags for sorting
+    sortFlag = ""
+    sortOption = ""
+    courseData = readFile("courses.json")
+    filterData = courseData
+
     print()
     userInput = input("Select one of the options: search/filter/exit\n").lower()
     if (userInput == "search"):
         userInput = input("Enter search query:\n").lower()
+
+        courseData = sort(courseData, "Name")
+
         print("\n **RESULTS**\n")
         search(courseData, userInput.replace("*", ""))
     
@@ -175,6 +213,7 @@ while (userInput != "exit"):
                     statusOption = input("Enter a status option to filter by (open/closed): ").lower()
                     print()
                     if (statusOption == "open" or statusOption == "closed"):
+                        filterData = sort(courseData, "Name")
                         filterData = filterStatus(filterData, statusOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, statusOption)
@@ -192,6 +231,7 @@ while (userInput != "exit"):
                     if (nameOption == "exit"):
                         closeCLI()
                     else:
+                        filterData = sort(courseData, "Name")
                         filterData = filterName(filterData, nameOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, nameOption)
@@ -204,6 +244,7 @@ while (userInput != "exit"):
                     if (facultyOption == "exit"):
                         closeCLI()
                     else:
+                        filterData = sort(courseData, "Faculty")
                         filterData = filterFaculty(filterData, facultyOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, facultyOption)
@@ -218,6 +259,7 @@ while (userInput != "exit"):
                     else:
                         try:
                             numCredits = float(creditsOption)
+                            filterData = sort(courseData, "Name")
                             filterData = filterCredits(filterData, creditsOption)
                             displayCourseList(filterData)
                             addValue(filterList, filterOption, creditsOption)
@@ -231,6 +273,7 @@ while (userInput != "exit"):
                     levelOption = input("Enter a level option (undergraduate/graduate): ").lower()
                     print()
                     if (levelOption == "undergraduate" or levelOption == "graduate"):
+                        filterData = sort(courseData, "Name")
                         filterData = filterLevel(filterData, levelOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, levelOption)
@@ -266,4 +309,3 @@ while (userInput != "exit"):
         
     else:
         print("Invalid Command")
-
