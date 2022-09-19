@@ -1,4 +1,4 @@
-# CIS3760-F2022 - UofG Course Search
+# CIS3760-F2022 - UofG Course Search - Sprint 2
 
 UofG Course Search is a CLI program to search for courses available during the semester at the University of Guelph.
 
