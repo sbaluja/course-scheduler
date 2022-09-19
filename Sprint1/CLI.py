@@ -211,7 +211,7 @@ while (userInput != "exit"):
                 while (statusOption != "exit"):
                     statusOption = input("Enter a status option to filter by (open/closed): ").lower()
                     if (statusOption == "open" or statusOption == "closed"):
-                        filterData = sort(courseData, "Name")
+                        filterData = sort(filterData, "Name")
                         filterData = filterStatus(filterData, statusOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, statusOption)
@@ -228,7 +228,7 @@ while (userInput != "exit"):
                     if (nameOption == "exit"):
                         closeCLI()
                     else:
-                        filterData = sort(courseData, "Name")
+                        filterData = sort(filterData, "Name")
                         filterData = filterName(filterData, nameOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, nameOption)
@@ -240,7 +240,7 @@ while (userInput != "exit"):
                     if (facultyOption == "exit"):
                         closeCLI()
                     else:
-                        filterData = sort(courseData, "Faculty")
+                        filterData = sort(filterData, "Faculty")
                         filterData = filterFaculty(filterData, facultyOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, facultyOption)
@@ -254,7 +254,7 @@ while (userInput != "exit"):
                     else:
                         try:
                             numCredits = float(creditsOption)
-                            filterData = sort(courseData, "Name")
+                            filterData = sort(filterData, "Name")
                             filterData = filterCredits(filterData, creditsOption)
                             displayCourseList(filterData)
                             addValue(filterList, filterOption, creditsOption)
@@ -267,7 +267,7 @@ while (userInput != "exit"):
                 while (levelOption != "exit"):
                     levelOption = input("Enter a level option (undergraduate/graduate): ").lower()
                     if (levelOption == "undergraduate" or levelOption == "graduate"):
-                        filterData = sort(courseData, "Name")
+                        filterData = sort(filterData, "Name")
                         filterData = filterLevel(filterData, levelOption)
                         displayCourseList(filterData)
                         addValue(filterList, filterOption, levelOption)
