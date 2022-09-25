@@ -1,42 +1,30 @@
 # CIS3760-F2022 - UofG Course Search - Sprint 2
 
-UofG Course Search is a CLI program to search for courses available during the semester at the University of Guelph.
+In this sprint, we were tasked with creating an Excel spreadsheet where a user can add upwards of five University of Guelph courses into five different cells. Given the courses, a VBA script is run to generate and display a course schedule for the week.
 
 ## Usage
 
-To run the program, ensure that the 'Section Selection Results WebAdvisor University of Guelph.html' file is located in the same folder as parser.py and CLI.py. Also ensure that the file name is the same as mentioned above.
+To run the program, ensure that the 'Section Selection Results WebAdvisor University of Guelph.html' file is located in the same folder as htmlToCsv.py.
 
-In the Sprint1 folder, run the following command to generate the required JSON for CLI.py.
-
-```
-python parser.py
-```
-
-This will generate a file named 'courses.json'. Afterwards, run the following command to execute the course search program.
+In the main directory, run the following command to generate the CSV file that contains all University of Guelph courses.
 
 ```
-python CLI.py
+python htmlToCsv.py
 ```
+
+A file named 'courses.csv' should be generated. Afterward, open the 'scheduler.xlsm' file in Excel. In the spreadsheet, if there is no imported 'courses' sheet containing the University of Guelph courses, import the courses.csv file into Excel. There should already be a 'Frontfacing' sheet that contains the UI for the user to interact with, add courses, and display their schedule for the week.
+
+You are now free to add courses in the 'Course Selection' section; you can either manually input the course name, or use the dropdown menu to the right of the 'Course Selection' cells to select your courses. 
+
+After the courses are inputted, the 'Course Info' section will display the lecture, lab, seminar, and exam times if applicable. 
+
+The courses can now be loaded into the schedule by clicking the 'Load Schedule' button.
+
+If there are any conflicts with the selected courses, a list of conflicts will be displayed under the 'Course Conflicts' section.
 
 ## Features
 
-UofG Course Search supports a multitude of features, including searching for and filtering available courses.
-
-### Search:
-
-- You may search for a course in the format of CIS*1300 or CIS1300
-- You can sort results in ascending or descending order (by course section)
-
-### Filter:
-
-- Status - Filters courses by status (e.g. Open or Closed)
-- Name - Filter courses by name (e.g. ACCT*1220 or ACCT)
-- Faculty - Filter courses by faculty (e.g. Lassou)
-- Credits - Filter courses by credits (e.g. 0.50)
-- Level Filter courses by level (e.g. Undergraduate or Graduate)
-- Reset - Remove the currently applied filters
-- Back - Move back to the search / filter selection menu
-- Exit - Exit the program
+The UofG scheduler supports a multitude of features, including an option for a dropdown menu to select courses, a dynamic 'Course Info' UI, and the display of 'Course Conflicts'
 
 ## Developed By
 
@@ -47,6 +35,3 @@ UofG Course Search supports a multitude of features, including searching for and
 - Luka
 - Rithik
 - Saarthi
-
-
-
