@@ -1,4 +1,4 @@
-# CIS3760-F2022 - UofG Course Search - Sprint 2
+# CIS3760-F2022 - UofG Course Scheduler - Sprint 2
 
 In this sprint, we were tasked with creating an Excel spreadsheet where a user can add upwards of five University of Guelph courses into five different cells. Given the courses, a VBA script is run to generate and display a course schedule for the week.
 
