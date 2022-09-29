@@ -43,26 +43,27 @@ if __name__ == '__main__':
 
         course_list = []
         for i in range(0,len(lineList)-9,9):
-            meeting = lineList[i+4]
-            lecStart = meeting.find("LEC")
-            labStart = meeting.find("LAB")
-            semStart = meeting.find("SEM")
-            examStart = meeting.find("EXAM")
-            indexes = [lecStart, labStart, semStart, examStart]
-            #print(str(lecStart) + " " + str(labStart) + " " + str(semStart) + " " + str(examStart))
+            if "*DE" not in lineList[i+2]:
+                meeting = lineList[i+4]
+                lecStart = meeting.find("LEC")
+                labStart = meeting.find("LAB")
+                semStart = meeting.find("SEM")
+                examStart = meeting.find("EXAM")
+                indexes = [lecStart, labStart, semStart, examStart]
+                #print(str(lecStart) + " " + str(labStart) + " " + str(semStart) + " " + str(examStart))
 
-            lecText = get_string(meeting, lecStart, indexes)
-            labText = get_string(meeting, labStart, indexes)
-            semText = get_string(meeting, semStart, indexes)
-            examText = get_string(meeting, examStart, indexes)
+                lecText = get_string(meeting, lecStart, indexes)
+                labText = get_string(meeting, labStart, indexes)
+                semText = get_string(meeting, semStart, indexes)
+                examText = get_string(meeting, examStart, indexes)
 
-            course_list.append({
-                'Name': lineList[i+2],
-                'LEC': lecText,
-                'LAB': labText,
-                'SEM': semText,
-                'EXAM': examText
-            })
+                course_list.append({
+                    'Name': lineList[i+2],
+                    'LEC': lecText,
+                    'LAB': labText,
+                    'SEM': semText,
+                    'EXAM': examText
+                })
 
     
     fieldnames = ['Name', 'LEC', 'LAB', 'SEM', 'EXAM']
