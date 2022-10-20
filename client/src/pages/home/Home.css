@@ -1,0 +1,76 @@
+body {
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: white;
+}
+
+/* for nav bar  */
+ul {
+    list-style-type: none;
+    left: 0px;
+    overflow: hidden;
+    background-color: #333;
+    width: 100%;
+    position: absolute;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
+
+
+/* for the title of the page */
+.title {
+    float: center;
+    text-align: center;
+    color: #333;
+    font-size: 50px;
+}
+
+/* button */
+.button {
+    background-color: #333;
+    color: white;
+    font-size: 16px;
+    padding: 12px 28px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.center {
+    text-align: center;
+}
+
+
+/* for the footer */
+footer {
+    clear: both;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    padding-bottom: 10px;
+    background-color: #333;
+    display: inline-block;
+}
+
+.footerhead {
+    clear: both;
+    font-size: medium;
+    text-align: left;
+    float: left;
+    margin-left: 21%;
+    color: white;
+}
