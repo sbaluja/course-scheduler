@@ -2,13 +2,16 @@ import axios from "axios";
 import "./Home.css"
 
 const Home: React.FC = () => {
+
   const submitButton = () => {
+
     // TODO: Change endpoint URL
     axios.get("https://jsonplaceholder.typicode.com/todos/1")
       .then((response) => {
-        alert(response.data)
+        alert("Example response: " + response.data.title)
       });
   }
+
   return (
     <div>
       <nav>
