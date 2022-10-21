@@ -1,6 +1,7 @@
 import axios from "axios";
 import "./Home.css"
 import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button"
 
 const Home: React.FC = () => {
 
@@ -15,7 +16,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="page-container">
-      <nav className="navbar">
+      <nav>
         <ul>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/page2">Page 2</Link></li>
@@ -26,7 +27,7 @@ const Home: React.FC = () => {
         <h1 className="header">Team 306!</h1>
       </div>
       <div className="button-container">
-        <button type="button" onClick={submitButton}>Test</button>
+        <Button size="lg" variant="dark" onClick={submitButton}>Test</Button>
       </div>
       <footer>
         <div>
