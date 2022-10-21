@@ -1,5 +1,6 @@
 import axios from "axios";
 import "./Home.css"
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
 
@@ -13,29 +14,30 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div>
-      <nav>
+    <div className="page-container">
+      <nav className="navbar">
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#page 2">Page 2</a></li>
-          <li><a href="#page 3">Page 3</a></li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/page2">Page 2</Link></li>
+          <li><Link to="/page3">Page 3</Link></li>
         </ul>
       </nav>
-      <br /><br /><br /><br /><br />
-      <br /><br /><br /><br /><br />
-      <br /><br /><br /><br /><br />
-      <h1 className="title">A Simple Website.</h1>
-      <div className="center">
-        <button className="button" type="button" onClick={submitButton}>Test</button>
+      <div className="header-container">
+        <h1 className="header">Team 306!</h1>
       </div>
-      <br /><br /><br /><br /><br />
-      <br /><br /><br /><br /><br />
-      <br /><br /><br /><br /><br />
-      <br /><br />
+      <div className="button-container">
+        <button type="button" onClick={submitButton}>Test</button>
+      </div>
       <footer>
-        <p className="footerhead">
-          A simple website.<br />For simple people.<br />Team 306
-        </p>
+        <div>
+          <span>A simple website.</span>
+        </div>
+        <div>
+          <span>For simple people.</span>
+        </div>
+        <div>
+          <span>Team 306.</span>
+        </div>
       </footer>
     </div >
   )

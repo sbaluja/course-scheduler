@@ -1,76 +1,80 @@
-body {
-    margin-left: 10%;
-    margin-right: 10%;
-    background-color: white;
+.page-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
 }
 
-/* for nav bar  */
-ul {
-    list-style-type: none;
-    left: 0px;
-    overflow: hidden;
-    background-color: #333;
+.navbar {
+    display: flex;
+    justify-content: center;
     width: 100%;
-    position: absolute;
 }
 
-li {
-    float: left;
+ul {
+    display: flex;
+    list-style-type: none;
+    background-color: #333;
+    margin: 0;
+    width: 100%;
 }
 
 li a {
-    display: block;
+    display: flex;
     color: white;
-    text-align: center;
-    padding: 14px 16px;
+    padding: 1rem;
     text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
 li a:hover {
     background-color: #111;
 }
 
-
-/* for the title of the page */
-.title {
-    float: center;
-    text-align: center;
-    color: #333;
-    font-size: 50px;
+.header-container {
+    display: flex;
+    align-self: center;
+    padding-top: 12rem;
 }
 
-/* button */
-.button {
-    background-color: #333;
+.header {
+    font-size: 3.5rem;
+}
+
+.button-container {
+    align-self: center;
+}
+
+button {
+    background-color: rgb(68, 68, 68);
     color: white;
-    font-size: 16px;
-    padding: 12px 28px;
-    font-size: 16px;
+    font-size: 1rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 1rem;
+    transition: background-color linear 2s;
+}
+
+button:hover {
     cursor: pointer;
+    background-color: #111;
 }
 
-.center {
-    text-align: center;
-}
-
-
-/* for the footer */
 footer {
-    clear: both;
-    width: 100%;
+    display: flex;
+    justify-content: space-around;
     position: absolute;
-    left: 0px;
-    padding-bottom: 10px;
+    bottom: 0px;
+    width: 100%;
+    padding-block: 1rem;
     background-color: #333;
-    display: inline-block;
 }
 
-.footerhead {
-    clear: both;
-    font-size: medium;
-    text-align: left;
-    float: left;
-    margin-left: 21%;
+footer>div {
+    display: flex;
+    justify-content: center;
+    width: 9rem;
+}
+
+footer>div>span {
+    font-size: 1rem;
     color: white;
 }
