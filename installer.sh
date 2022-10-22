@@ -8,10 +8,10 @@
 input="requirements.txt"
 
 # for each requirement in the file
-while IFS= read -r file; do
+while IFS= read -r line; do
 
     # trim trailing whitespace
-    requirements="${file%?}"
+    requirements="${line}"
 
     # check if package exists and store in variable
     dpkg -s $requirement &> /dev/null
@@ -20,12 +20,12 @@ while IFS= read -r file; do
     if [ $? -ne 0 ]
         then
             # install flow
-            echo "The package '$requirement' is not installed. Attempting to install..."
+            echo "The package '$requirements' is not installed. Attempting to install..."
             sudo apt-get update
-            sudo apt-get install $requirement -y
+            sudo apt-get install $requirements -y
         else
             # do nothing
-            echo "The package '$requirement' is already installed."
+            echo "The package "$requirements" is already installed."
     fi
 
 done < "$input"
