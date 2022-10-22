@@ -8,23 +8,23 @@
 input="requirements.txt"
 
 # for each requirement in the file
-while IFS= read -r file; do
+while IFS= read -r line; do
 
     # trim trailing whitespace
-    requirements="${file%?}"
+    requirements="${line%?}"
 
     # check if package exists and store in variable
-    dpkg -s $requirement &> /dev/null
+    dpkg -s $requirements &> /dev/null
 
     # read from variable
     if [ $? -ne 0 ]
         then
             # do nothing
-            echo "The package '$requirement' is not installed."
+            echo "The package '$requirements' is not installed."
         else
             # uninstall flow
-            echo "The package '$requirement' is installed. Attempting to install..."
-            sudo apt-get remove $requirement -y
+            echo "The package '$requirements' is installed. Attempting to install..."
+            sudo apt-get remove $requirements -y
     fi
 
 done < "$input"

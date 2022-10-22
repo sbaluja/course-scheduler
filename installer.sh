@@ -11,10 +11,10 @@ input="requirements.txt"
 while IFS= read -r line; do
 
     # trim trailing whitespace
-    requirements="${line}"
+    requirements="${line%?}"
 
     # check if package exists and store in variable
-    dpkg -s $requirement &> /dev/null
+    dpkg -s $requirements &> /dev/null
 
     # read from variable
     if [ $? -ne 0 ]
