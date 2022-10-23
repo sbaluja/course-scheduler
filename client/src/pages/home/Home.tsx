@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import "./Home.css"
 import { Link } from "react-router-dom";
@@ -9,16 +10,15 @@ const Home: React.FC = () => {
 
     axios({
       method: "GET",
-      url:"http://localhost:5000/testButton",
-    })
-    .then((response) => {
+      url: "http://localhost:5000/testButton",
+    }).then((response) => {
       alert("Example response: " + response.data.title)
     }).catch((error) => {
       if (error.response) {
         console.log(error.response)
         console.log(error.response.status)
         console.log(error.response.headers)
-        }
+      }
     })
   }
 
