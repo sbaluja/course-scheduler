@@ -2,6 +2,11 @@
 
 ## Installation
 
+Before running the installer script, update PATH variable:
+```
+export PATH=$PATH:/usr/sbin
+```
+
 Run the installer script by executing the command:
 ```
 bash installer.sh
