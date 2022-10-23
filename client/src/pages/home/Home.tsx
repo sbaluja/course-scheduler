@@ -7,11 +7,19 @@ const Home: React.FC = () => {
 
   const submitButton = () => {
 
-    // TODO: Change endpoint URL
-    axios.get("https://jsonplaceholder.typicode.com/todos/1")
-      .then((response) => {
-        alert("Example response: " + response.data.title)
-      });
+    axios({
+      method: "GET",
+      url:"http://localhost:5000/testButton",
+    })
+    .then((response) => {
+      alert("Example response: " + response.data.title)
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })
   }
 
   return (

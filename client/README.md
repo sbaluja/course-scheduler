@@ -1,3 +1,19 @@
+# Backend Setup
+Run the following commands
+```
+MacOS
+python3 -m venv venv
+. venv/bin/activate
+pip install flask
+python3 server.py
+
+Windows
+py -3 -m venv venv
+venv\Scripts\activate
+pip install flask
+python server.py
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
