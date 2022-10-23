@@ -21,11 +21,21 @@ while IFS= read -r line; do
         then
             # install flow
             echo "The package '$requirements' is not installed. Attempting to install..."
-            sudo apt-get update
-            sudo apt-get install $requirements -y
+            sudo apt update
+            sudo apt install $requirements -y
         else
             # do nothing
-            echo "The package "$requirements" is already installed."
+	    if [ $requirements != "npm" ]
+	        then
+	            echo "The package "$requirements" is already installed."
+	    fi
+    fi
+
+    if [ $requirements == "npm" ]
+        then 
+             sudo apt-get install -y npm
     fi
 
 done < "$input"
+
+export PATH=$PATH:/usr/sbin

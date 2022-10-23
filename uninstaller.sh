@@ -23,8 +23,9 @@ while IFS= read -r line; do
             echo "The package '$requirements' is not installed."
         else
             # uninstall flow
-            echo "The package '$requirements' is installed. Attempting to install..."
-            sudo apt-get remove $requirements -y
+            echo "The package '$requirements' is installed. Attempting to uninstall..."
+            sudo apt remove $requirements -y
+ 	    sudo apt autoremove -y
     fi
 
 done < "$input"
