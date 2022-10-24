@@ -1,0 +1,7 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    root /var/www/131.104.49.100;
+    index index.html;
+}
