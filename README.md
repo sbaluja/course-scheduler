@@ -2,19 +2,35 @@
 
 ## Installation
 
+First install git by executing the command:
+
+```
+sudo apt install git
+```
+
+Then clone the repo by executing the command:
+```
+git clone https://gitlab.socs.uoguelph.ca/tinson/cis3760-f2022.git
+```
+
 Before running the installer script, update PATH variable:
 ```
 export PATH=$PATH:/usr/sbin
 ```
 
-Run the installer script by executing the command:
+Run the installer script by navigating to the repo folder and executing the command:
 ```
 bash installer.sh
 ```
 
-Start server by executing the command:
+Configure and start the NGINX web server by executing the command:
 ```
-Something here
+bash deploy.sh
+```
+
+You can now access the website at:
+```
+https://131.104.49.100/
 ```
 
 ## Uninstallation
