@@ -4,4 +4,13 @@ server {
 
     root /var/www/131.104.49.100;
     index index.html;
+
+    location / {
+        try_files $uri $uri/ = 404;
+    }
+
+    location /testbutton {
+        include proxy_params;
+        proxy_pass http://localhost:5000;
+    }
 }
