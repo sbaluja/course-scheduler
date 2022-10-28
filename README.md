@@ -45,6 +45,9 @@ bash uninstaller.sh
 - JavaScript/TypeScript
 - React
 - jQuery
+- Python
+- Pip
+- Flask
 
 ***
 
