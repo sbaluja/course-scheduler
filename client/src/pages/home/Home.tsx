@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Navbar } from "../../components/navbar";
+import { PageContainer, HeroContainer, HeroText } from "./Home.styled";
+import Button from "react-bootstrap/Button";
 
 const Home: React.FC = () => {
 
@@ -20,9 +22,16 @@ const Home: React.FC = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <Navbar />
-    </>
+      <HeroContainer>
+        <HeroText>
+          <h1>Welcome to&nbsp;</h1>
+          <h1 className="text-primary">CourseClub!</h1>
+        </HeroText>
+      </HeroContainer>
+      {/* <Footer /> */}
+    </PageContainer>
   );
 };
 

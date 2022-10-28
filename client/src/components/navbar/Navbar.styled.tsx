@@ -61,13 +61,13 @@ const fadeIn = keyframes`
         opacity: 0%;
     }
     to {
-        opacity: 85%;
+        opacity: 92%;
     }
 `;
 
 const fadeOut = keyframes`
     from {
-      opacity: 85%;
+      opacity: 92%;
     }
     to {
       opacity: 0%;
@@ -76,6 +76,7 @@ const fadeOut = keyframes`
 
 export const MobileMenu = styled.div<{ isOpen: boolean }>`
   display: flex;
+  background-color: #ffffff;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -85,7 +86,7 @@ export const MobileMenu = styled.div<{ isOpen: boolean }>`
   text-align: center;
   top: 0;
   left: 0;
-  opacity: 90%;
+  opacity: 92%;
   visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
   animation: ${({ isOpen }) => (isOpen ? fadeIn : fadeOut)} 0.5s linear;
   transition: visibility 0.5s linear;
