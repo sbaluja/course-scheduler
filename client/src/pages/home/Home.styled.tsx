@@ -6,13 +6,14 @@ export const PageContainer = styled.div`
 
 export const HeroContainer = styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 32rem;
+    height: 44rem;
 `;
 
 export const HeroText = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-`
+`;

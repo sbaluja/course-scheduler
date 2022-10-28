@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
     <Container>
       <FooterDivider />
       <RightsContainer>
-        <p>© 2022 CourseClub Team306. All Rights Reserved</p>
+        <p>© 2022 CourseClub - Team306. All Rights Reserved</p>
       </RightsContainer>
     </Container>
   );
