@@ -22,10 +22,17 @@ while IFS= read -r line; do
             # do nothing
             echo "The package '$requirements' is not installed."
         else
-            # uninstall flow
-            echo "The package '$requirements' is installed. Attempting to uninstall..."
-            sudo apt remove $requirements -y
- 	    sudo apt autoremove -y
+
+            if [ $requirements == "fullcalendar" ]
+                then
+                    npm uninstall $requirements
+            else
+                # uninstall flow
+                echo "The package '$requirements' is installed. Attempting to uninstall..."
+                sudo apt remove $requirements -y
+            fi
+
+        sudo apt autoremove -y
     fi
 
 done < "$input"

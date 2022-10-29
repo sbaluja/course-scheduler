@@ -25,6 +25,7 @@ while IFS= read -r line; do
             sudo apt install $requirements -y
         else
             # do nothing
+
 	    if [ $requirements != "npm" ]
 	        then
 	            echo "The package "$requirements" is already installed."
@@ -34,6 +35,11 @@ while IFS= read -r line; do
     if [ $requirements == "npm" ]
         then 
              sudo apt-get install -y npm
+    fi
+
+    if [ $requirements == "fullcalendar" ]
+        then
+            npm install --save @fullcalendar/core @fullcalendar/daygrid
     fi
 
 done < "$input"
