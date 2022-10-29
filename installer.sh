@@ -42,6 +42,11 @@ while IFS= read -r line; do
             npm install --save @fullcalendar/core @fullcalendar/daygrid
     fi
 
+    if [ $requirements == "fullcalendar" ]
+        then
+            npm install --save-dev @types/jquery
+    fi
+
 done < "$input"
 
 export PATH=$PATH:/usr/sbin
