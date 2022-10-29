@@ -8,118 +8,18 @@ import { Courses } from "./pages/courses";
 
 const App = () => {
 
-  const dummyCourses: CoursesType = [
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    },
-    {
-      term: "F22",
-      status: "Open",
-      name: "ACCT*1220",
-      location: "Guelph",
-      meeting: "Idk",
-      faculty: "Obimbo",
-      capacity: "22/50",
-      credits: "0.5",
-      level: "Undergraduate"
-    }
-  ];
+  let dummyCourses: CoursesType;
+
+    $.ajax({
+      url: "http://localhost:5000/courseData",
+      dataType: "json",
+      async : false,
+      type: "get",
+      success: function(data){
+        dummyCourses = data;
+        console.log(dummyCourses);
+      }
+    });
 
   const [courses, setCourses] = useState<CoursesType>([]);
 
@@ -127,7 +27,7 @@ const App = () => {
   useEffect(() => {
     setCourses(dummyCourses);
   }, []);
-
+  
   return (
     <Router>
       <Routes>

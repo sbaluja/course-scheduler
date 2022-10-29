@@ -1,6 +1,6 @@
 export type CourseType = {
-    term: String,
-    status: String,
+    Term: String,
+    Status: String,
     name: String,
     location: String,
     meeting: String,

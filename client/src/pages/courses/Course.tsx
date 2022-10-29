@@ -10,8 +10,8 @@ const Course = ({ course }: CourseProps) => {
                 <hr />
                 <Card.Subtitle className="mb-2 text-muted">{course.location}</Card.Subtitle>
                 <Card.Text>
-                    Term: {course.term} <br />
-                    Status: {course.status} <br />
+                    Term: {course.Term} <br />
+                    Status: {course.Status} <br />
                     Meeting: {course.meeting} <br />
                     Faculty: {course.faculty} <br />
                     Capacity: {course.capacity} <br />
