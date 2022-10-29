@@ -1,11 +1,25 @@
 import React from "react";
-import { Navbar } from "../../components/navbar";
+import { Layout } from "../../components/layout";
+import { Course } from "./Course";
+import { CoursesProps } from "./Course.types";
+import { Container, Grid } from "./Courses.styled";
 
-const Courses: React.FC = () => {
+const Courses = ({ courses }: CoursesProps) => {
   return (
-    <>
-      <Navbar />
-    </>
+    <Layout>
+      <Container>
+        <Grid>
+          {courses.map((course, i) => {
+            return (
+              <Course
+                key={i}
+                course={course}
+              />
+            );
+          })}
+        </Grid>
+      </Container>
+    </Layout>
   );
 };
 
