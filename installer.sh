@@ -37,14 +37,9 @@ while IFS= read -r line; do
              sudo apt-get install -y npm
     fi
 
-    if [ $requirements == "fullcalendar" ]
+    if [ $requirements == "fullcalendar" ] || [ $requirements == "jquery" ]
         then
-            npm install --save @fullcalendar/core @fullcalendar/daygrid
-    fi
-
-    if [ $requirements == "fullcalendar" ]
-        then
-            npm install --save-dev @types/jquery
+            npm i $requirements
     fi
 
 done < "$input"
