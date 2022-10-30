@@ -3,6 +3,11 @@ server {
     listen [::]:80;
     server_name 131.104.49.100;
     return 302 https://$server_name$request_uri;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/socs/CIS3760/Prod/server.sock;
+    }
 }
 
 server {
@@ -15,4 +20,9 @@ server {
 
     root /var/www/131.104.49.100;
     index index.html;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/socs/CIS3760/Prod/server.sock;
+    }
 }
