@@ -33,8 +33,12 @@ while IFS= read -r line; do
     fi
 
     if [ $requirements == "npm" ]
-        then 
+        then
              sudo apt-get install -y npm
+             npm install -g n
+             n lts
+             n latest
+             n prune
     fi
 
     if [ $requirements == "fullcalendar" ] || [ $requirements == "jquery" ]
