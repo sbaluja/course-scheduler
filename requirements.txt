@@ -6,3 +6,4 @@ python3-pip
 python3-flask
 fullcalendar
 jquery
+python3.8-venv
