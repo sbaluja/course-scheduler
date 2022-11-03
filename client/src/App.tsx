@@ -26,12 +26,31 @@ const App = () => {
   const fetchCourses = () => {
     setCoursesLoading(true);
 
+    // $.ajax({
+    //   url: "http://localhost:5000/courseData",
+    //   dataType: "json",
+    //   type: "get",
+    //   success: (data) => {
+    //     setCourses(data)
+    //   },
+    //   error: () => {
+    //     setError(true)
+    //   }
+    // });
+
     $.ajax({
-      url: "http://localhost:5000/courseData",
+      url: "http://localhost:5000/get-schedule",
       dataType: "json",
-      type: "get",
-      success: (data) => {
-        setCourses(data)
+      type: "POST",
+      data: {
+        'course1': 'VETM*4870*0102 (0325) Clinical Medicine III',
+        'course2': 'SOC*2700*01 (9228) Criminological Theory',
+        'course3': 'PHIL*4720*02 (8917) Directed Reading',
+        'course4': 'MBG*3350*0103 (8546) Lab Methods in Molecular Biol',
+        'course5': 'MCS*4910*02 (9513) Topics in Consumer Studies'
+      }
+      success: (response) => {
+        console.log(response)
       },
       error: () => {
         setError(true)
