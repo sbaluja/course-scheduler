@@ -40,7 +40,8 @@ const App = () => {
 
     $.ajax({
       url: "http://localhost:5000/get-schedule",
-      dataType: "json",
+      dataType: "application/json",
+      async: false,
       type: "POST",
       data: {
         'course1': 'VETM*4870*0102 (0325) Clinical Medicine III',
@@ -48,12 +49,14 @@ const App = () => {
         'course3': 'PHIL*4720*02 (8917) Directed Reading',
         'course4': 'MBG*3350*0103 (8546) Lab Methods in Molecular Biol',
         'course5': 'MCS*4910*02 (9513) Topics in Consumer Studies'
-      }
+      },
       success: (response) => {
         console.log(response)
+        console.log("success")
       },
       error: () => {
         setError(true)
+        console.log("error")
       }
     });
 

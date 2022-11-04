@@ -28,7 +28,7 @@ def courseData():
 	return resp
 
 # given keyword, returns factoid
-@app.route('/get-schedule', methods=['GET'])
+@app.route('/get-schedule', methods=['POST'])
 def courseSearch():
     file = open("courses.json", "r")
     file_obj = json.load(file)
@@ -47,9 +47,11 @@ def courseSearch():
                 returned_courses['course'+str(i+1)] = one_course
                 break
 
+    # print(selected_courses)
     resp = make_response(returned_courses)
     resp.headers['Access-Control-Allow-Origin'] = '*'
     resp.status_code = 200
+    print(returned_courses)
     return resp
 
 if __name__ == '__main__':
