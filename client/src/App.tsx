@@ -40,7 +40,7 @@ const App = () => {
 
     $.ajax({
       url: "http://localhost:5000/get-schedule",
-      dataType: "application/json",
+      dataType: "json",
       async: false,
       type: "POST",
       data: {
@@ -50,7 +50,7 @@ const App = () => {
         'course4': 'MBG*3350*0103 (8546) Lab Methods in Molecular Biol',
         'course5': 'MCS*4910*02 (9513) Topics in Consumer Studies'
       },
-      success: (response) => {
+      success: (response : JSON) => {
         console.log(response)
         console.log("success")
       },
