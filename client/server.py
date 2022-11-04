@@ -28,7 +28,7 @@ def courseData():
 	return resp
 
 # given keyword, returns factoid
-@app.route('/get-schedule', methods=['POST'])
+@app.route('/get-schedule', methods=['GET'])
 def courseSearch():
     file = open("courses.json", "r")
     file_obj = json.load(file)
@@ -40,17 +40,17 @@ def courseSearch():
     selected_courses.append(data.get('course4'))
     selected_courses.append(data.get('course5'))
 
-    returned_courses = []
-    for course in selected_courses:
+    returned_courses = {}
+    for i in range(0, len(selected_courses)):
         for one_course in file_obj:
-            if (course == one_course["name"]):
-                returned_courses.append(course)
+            if (selected_courses[i] == one_course["name"]):
+                returned_courses['course'+str(i+1)] = one_course
                 break
 
-	resp = make_response(returned_courses)
-	resp.headers['Access-Control-Allow-Origin'] = '*'
-	resp.status_code = 200
-	return resp
+    resp = make_response(returned_courses)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.status_code = 200
+    return resp
 
 if __name__ == '__main__':
     app.run(debug = True)
