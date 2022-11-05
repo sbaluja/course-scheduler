@@ -9,6 +9,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+  //strict mode causes components to be rendered twice
   <React.StrictMode>
     <App />
   </React.StrictMode>
