@@ -26,17 +26,17 @@ const App = () => {
   const fetchCourses = () => {
     setCoursesLoading(true);
 
-    // $.ajax({
-    //   url: "http://localhost:5000/courseData",
-    //   dataType: "json",
-    //   type: "get",
-    //   success: (data) => {
-    //     setCourses(data)
-    //   },
-    //   error: () => {
-    //     setError(true)
-    //   }
-    // });
+     $.ajax({
+       url: "http://localhost:5000/courseData",
+       dataType: "json",
+       type: "get",
+       success: (data) => {
+         setCourses(data)
+       },
+       error: () => {
+         setError(true)
+       }
+     });
 
     $.ajax({
       url: "http://localhost:5000/get-schedule",
@@ -51,6 +51,8 @@ const App = () => {
         'course5': 'MCS*4910*02 (9513) Topics in Consumer Studies'
       },
       success: (response : JSON) => {
+        //TODO: Parse json array and create event objects array
+        
         console.log(response)
         console.log("success")
       },
