@@ -9,7 +9,6 @@ import { Courses } from "./pages/courses";
 import { Schedule } from "./pages/schedule";
 
 const App = () => {
-
   // States
   const [courses, setCourses] = useState<CoursesType>([]);
   const [coursesLoading, setCoursesLoading] = useState<boolean>(false);
@@ -28,24 +27,31 @@ const App = () => {
 
   // Filter searched courses
   const filterCourses = (query: string) => {
-      setFilteredCourses(courses.filter(course => course.name.toLowerCase().includes(query)));
-  }
+    setFilteredCourses(
+      courses.filter((course) =>
+        course.name
+          .toLowerCase()
+          .replace("*", "")
+          .includes(query.replace("*", ""))
+      )
+    );
+  };
 
   const fetchCourses = () => {
     setCoursesLoading(true);
 
-     $.ajax({
-       url: "http://localhost:5000/courseData",
-       dataType: "json",
-       type: "get",
-       success: (data) => {
-         setCourses(data)
-         setFilteredCourses(data)
-       },
-       error: () => {
-         setError(true)
-       }
-     });
+    $.ajax({
+      url: "http://localhost:5000/courseData",
+      dataType: "json",
+      type: "get",
+      success: (data) => {
+        setCourses(data);
+        setFilteredCourses(data);
+      },
+      error: () => {
+        setError(true);
+      },
+    });
 
     $.ajax({
       url: "http://localhost:5000/get-schedule",
@@ -53,26 +59,26 @@ const App = () => {
       async: false,
       type: "POST",
       data: {
-        'course1': 'VETM*4870*0102 (0325) Clinical Medicine III',
-        'course2': 'SOC*2700*01 (9228) Criminological Theory',
-        'course3': 'PHIL*4720*02 (8917) Directed Reading',
-        'course4': 'MBG*3350*0103 (8546) Lab Methods in Molecular Biol',
-        'course5': 'MCS*4910*02 (9513) Topics in Consumer Studies'
+        course1: "VETM*4870*0102 (0325) Clinical Medicine III",
+        course2: "SOC*2700*01 (9228) Criminological Theory",
+        course3: "PHIL*4720*02 (8917) Directed Reading",
+        course4: "MBG*3350*0103 (8546) Lab Methods in Molecular Biol",
+        course5: "MCS*4910*02 (9513) Topics in Consumer Studies",
       },
-      success: (response : JSON) => {
+      success: (response: JSON) => {
         //TODO: Parse json array and create event objects array
-        
-        console.log(response)
-        console.log("success")
+
+        console.log(response);
+        console.log("success");
       },
       error: () => {
-        setError(true)
-        console.log("error")
-      }
+        setError(true);
+        console.log("error");
+      },
     });
 
     setCoursesLoading(false);
-  }
+  };
 
   useEffect(() => {
     fetchCourses();
@@ -95,12 +101,13 @@ const App = () => {
           filteredCourses,
           filterCourses,
           courseName,
-          setCourseName
-        }}>
+          setCourseName,
+        }}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses />} />
-          <Route path="/schedule" element={<Schedule />}/>
+          <Route path="/schedule" element={<Schedule />} />
         </Routes>
       </CoursesContext.Provider>
     </Router>
