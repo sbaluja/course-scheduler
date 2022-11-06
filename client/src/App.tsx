@@ -6,6 +6,7 @@ import { CoursesContext } from "./contexts/course-context";
 // Pages
 import { Home } from "./pages/home";
 import { Courses } from "./pages/courses";
+import { Schedule } from "./pages/schedule";
 
 const App = () => {
 
@@ -15,6 +16,8 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [coursesPerPage, setCoursesPerPage] = useState<number>(200);
   const [error, setError] = useState<boolean>(false);
+  const [filteredCourses, setFilteredCourses] = useState<CoursesType>([]);
+  const [courseName, setCourseName] = useState("");
 
   // Pagination calculations
   const lastCourseIdx = currentPage * coursesPerPage;
@@ -22,6 +25,11 @@ const App = () => {
   const currentCourses = courses.slice(firstCourseIdx, lastCourseIdx);
   const totalCourses = courses.length;
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Filter searched courses
+  const filterCourses = (query: string) => {
+      setFilteredCourses(courses.filter(course => course.name.toLowerCase().includes(query)));
+  }
 
   const fetchCourses = () => {
     setCoursesLoading(true);
@@ -32,6 +40,7 @@ const App = () => {
        type: "get",
        success: (data) => {
          setCourses(data)
+         setFilteredCourses(data)
        },
        error: () => {
          setError(true)
@@ -82,11 +91,16 @@ const App = () => {
           coursesLoading,
           setCoursesLoading,
           error,
-          setError
+          setError,
+          filteredCourses,
+          filterCourses,
+          courseName,
+          setCourseName
         }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/schedule" element={<Schedule />}/>
         </Routes>
       </CoursesContext.Provider>
     </Router>

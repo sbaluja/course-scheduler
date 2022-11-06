@@ -12,6 +12,10 @@ interface CoursesContextInterface {
     setCoursesLoading: any;
     error: boolean;
     setError: any;
+    filteredCourses: CoursesType;
+    filterCourses: any;
+    courseName: string;
+    setCourseName: any;
 }
 
 const defaultCoursesContext: CoursesContextInterface = {
@@ -25,6 +29,10 @@ const defaultCoursesContext: CoursesContextInterface = {
     setCoursesLoading: null,
     error: false,
     setError: null,
+    filteredCourses: [],
+    filterCourses: null,
+    courseName: "",
+    setCourseName: null,
 };
 
 export const CoursesContext = createContext<CoursesContextInterface>(

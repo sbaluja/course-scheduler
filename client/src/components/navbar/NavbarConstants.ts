@@ -14,8 +14,8 @@ export const pages: Array<LinkType> = [
     link: "/page3"
   },
   {
-    name: "page4",
-    link: "/page4"
+    name: "schedule",
+    link: "/schedule"
   },
   {
     name: "page5",

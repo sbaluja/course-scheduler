@@ -1,13 +1,15 @@
+import { ReactNode } from "react";
+
 export type CourseType = {
-    Term: String,
-    Status: String,
-    name: String,
-    location: String,
-    meeting: String,
-    faculty: String,
-    capacity: String,
-    credits: String,
-    level: String
+    Term: string,
+    Status: string,
+    name: string,
+    location: string,
+    meeting: string,
+    faculty: string,
+    capacity: string,
+    credits: string,
+    level: string
 };
 
 export type CoursesType = Array<CourseType>;
