@@ -8,12 +8,16 @@ import {
   Container,
   SubContainer,
   Input,
+  SelectedCoursesContainer,
+  SearchContainer,
+  RemovableCourse,
+  CalendarContainer,
 } from "./Schedule.styled";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { CourseType } from "../../utils/common_types";
+import { CourseType, CoursesType } from "../../utils/common_types";
 
 const Schedule = () => {
   const {
@@ -24,7 +28,18 @@ const Schedule = () => {
     setCourseName,
   } = useContext(CoursesContext);
   const [show, setShow] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<CourseType>();
+  const [selectedCourse, setSelectedCourse] = useState<CourseType>({
+    Term: "",
+    Status: "",
+    name: "",
+    location: "",
+    meeting: "",
+    faculty: "",
+    capacity: "",
+    credits: "",
+    level: "",
+  });
+  const [selectedCourses, setSelectedCourses] = useState<CoursesType>([]);
 
   // TODO: Update events
   const events = [
@@ -63,15 +78,32 @@ const Schedule = () => {
 
   const handleCloseModal = () => setShow(false);
 
-  const handleAddCourse = (course: CourseType | undefined) => {
-    console.log(course);
+  const handleAddCourse = (newCourse: CourseType) => {
+    if (selectedCourses.length < 5 && selectedCourses != undefined) {
+      // Handles duplicates
+      selectedCourses.forEach((course) => {
+        if (course.name == newCourse.name) {
+          alert("Error: Course has already been added");
+        }
+      });
+      setSelectedCourses([...selectedCourses, newCourse]);
+      // TODO: Add course to "events" list
+    } else {
+      alert("Error: Number of courses exceeded");
+    }
     setShow(false);
-    // TODO: Add course to "events" list if not full...
-    // and add course to the "Selected Courses" component - Mr luka
   };
 
-  const handleRemoveCourse = () => {
-    // TODO: Remove course from "events" list and "Selected Courses" component
+  const handleRemoveCourse = (courseName: string) => {
+    // TODO: Remove course from "events" list
+    let updatedCourses: CoursesType = [];
+    if (selectedCourses != undefined) {
+      updatedCourses = selectedCourses.filter((course) => {
+        return course.name != courseName;
+      });
+    }
+
+    setSelectedCourses(updatedCourses);
   };
 
   return (
@@ -79,42 +111,63 @@ const Schedule = () => {
       <Container>
         {/* Search Component */}
         <SubContainer>
-          <Input
-            type="text"
-            id="course"
-            name="course"
-            placeholder="Search courses"
-            onChange={handleChange}
-            value={courseName}
-          />
-          <ScrollableContainer>
+          <SearchContainer>
+            <h2>Search Courses</h2>
+            <Input
+              type="text"
+              id="course"
+              name="course"
+              placeholder="Acct*1220"
+              onChange={handleChange}
+              value={courseName}
+            />
+            <ScrollableContainer>
+              <List>
+                {filteredCourses.map((course, i) => (
+                  <ListItem
+                    onClick={() => handleShowModal(course)}
+                    value={course.name}
+                    key={i}
+                  >
+                    {course.name}
+                  </ListItem>
+                ))}
+              </List>
+            </ScrollableContainer>
+          </SearchContainer>
+        </SubContainer>
+
+        {/* Selected Courses Component */}
+        <SubContainer>
+          <SelectedCoursesContainer>
+            <h2>Selected Courses</h2>
             <List>
-              {filteredCourses.map((course, i) => (
-                <ListItem
-                  onClick={() => handleShowModal(course)}
-                  value={course.name}
-                  key={i}
-                >
-                  {course.name}
-                </ListItem>
+              {selectedCourses.map((course, i) => (
+                <li key={i} onClick={() => handleRemoveCourse(course.name)}>
+                  <RemovableCourse>{course.name} </RemovableCourse>
+                </li>
               ))}
             </List>
-          </ScrollableContainer>
+          </SelectedCoursesContainer>
         </SubContainer>
-        {/* Selected Courses Component */}
-        <SubContainer></SubContainer>
+
         {/* Course Conflicts Component */}
         <SubContainer></SubContainer>
       </Container>
-      {/* <FullCalendar
-        plugins={[ timeGridPlugin ]}
-        weekends={false}
-        slotDuration='00:30'
-        slotMinTime='08:00'
-        slotMaxTime='23:30'
-        timeZone='local'
-        events={events}
-      /> */}
+      <CalendarContainer>
+        <FullCalendar
+          plugins={[timeGridPlugin]}
+          weekends={false}
+          slotDuration="00:30"
+          slotMinTime="08:00"
+          slotMaxTime="23:30"
+          timeZone="local"
+          events={events}
+          height={950}
+        />
+      </CalendarContainer>
+
+      {/* Add modal */}
       <Modal show={show} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           {selectedCourse == undefined ? (
