@@ -90,8 +90,6 @@ const Schedule = () => {
   };
 
   const addEvent = (meeting: string, start: number, text: string) => {
-    console.log(meeting);
-
     courseDate = selectedCourse.meeting.substring(0, start);
     endDateIndex = courseDate.indexOf("-");
 
@@ -192,30 +190,17 @@ const Schedule = () => {
       labText = validEvent(selectedCourse.meeting, labStart, indexes);
       semText = validEvent(selectedCourse.meeting, semStart, indexes);
 
-      console.log(lecText);
-      console.log(labText);
-      console.log(semText);
-
       if (lecText != "") {
-        console.log("Lecture");
         // Add lecture event
         addEvent("Lecture", lecStart, lecText);
-
-        console.log(events);
       }
       if (labText != "") {
-        console.log("Lab");
-
         // Add lab event
         addEvent("Lab", labStart, labText);
-        console.log(events);
       }
       if (semText != "") {
-        console.log("Seminar");
-
         // Add sem event
         addEvent("Seminar", semStart, semText);
-        console.log(events);
       }
       setNumCourses(numCourses + 1);
     } else {
@@ -224,8 +209,8 @@ const Schedule = () => {
     setShow(false);
   };
 
+  // Removes courses from selected courses list and schedule
   const handleRemoveCourse = (courseName: string) => {
-    // TODO: Remove course from "events" list
     let updatedCourses: CoursesType = [];
     if (selectedCourses != undefined) {
       updatedCourses = selectedCourses.filter((course) => {
@@ -234,6 +219,21 @@ const Schedule = () => {
     }
 
     setSelectedCourses(updatedCourses);
+
+    console.log(courseName);
+
+    let updatedEvents: EventType[] = [];
+    if (events != undefined) {
+      updatedEvents = events.filter((event) => {
+        return !event.title.includes(courseName);
+      });
+    }
+
+    setNumCourses(0);
+
+    // Update colours
+
+    setEvents(updatedEvents);
   };
 
   return (
