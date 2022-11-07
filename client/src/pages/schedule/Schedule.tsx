@@ -73,7 +73,18 @@ const Schedule = () => {
     setShow(true);
   };
 
-  const handleCloseModal = () => setShow(false);
+  const handleShowRemoveModal = (courseName: string) => {
+    setSelectedRemoveCourse(courseName);
+    setShowRemove(true);
+  };
+
+  const handleCloseModal = () => {
+    setShow(false);
+    setShowRemove(false);
+  };
+
+  const [showRemove, setShowRemove] = useState(false);
+  const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
 
   const validEvent = (meeting: string, wanted: number, indexes: number[]) => {
     if (wanted == -1) {
@@ -230,7 +241,7 @@ const Schedule = () => {
       });
     }
 
-    setNumCourses(0);
+    setNumCourses((numCourses) => 0);
     let temp = '';
     console.log(numCourses);
 
@@ -249,6 +260,7 @@ const Schedule = () => {
     });
 
     setEvents(updatedEvents);
+    setShowRemove(false);
   };
 
   return (
@@ -288,7 +300,7 @@ const Schedule = () => {
             <h2>Selected Courses</h2>
             <List>
               {selectedCourses.map((course, i) => (
-                <li key={i} onClick={() => handleRemoveCourse(course.name)}>
+                <li key={i} onClick={() => handleShowRemoveModal(course.name)}>
                   <RemovableCourse>{course.name} </RemovableCourse>
                 </li>
               ))}
@@ -317,7 +329,7 @@ const Schedule = () => {
       </CalendarContainer>
 
       {/* Add modal */}
-      <Modal show={show} onHide={handleCloseModal}>
+      <Modal show={show} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           {selectedCourse == undefined ? (
             <Modal.Title>Something went wrong...</Modal.Title>
@@ -349,6 +361,23 @@ const Schedule = () => {
             onClick={() => handleAddCourse(selectedCourse)}
           >
             Add Course
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Remove Modal */}
+      <Modal show={showRemove} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedRemoveCourse}</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => handleRemoveCourse(selectedRemoveCourse)}
+          >
+            Remove Course
           </Button>
         </Modal.Footer>
       </Modal>
