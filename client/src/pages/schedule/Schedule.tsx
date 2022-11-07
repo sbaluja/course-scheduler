@@ -19,6 +19,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { CourseType, CoursesType } from "../../utils/common_types";
 import internal from "stream";
+import { EventType } from "./Schedule.types";
 
 const Schedule = () => {
   const {
@@ -41,25 +42,26 @@ const Schedule = () => {
     level: "",
   });
   const [selectedCourses, setSelectedCourses] = useState<CoursesType>([]);
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [numCourses, setNumCourses] = useState<number>(0);
 
-  const colors = ["red", "blue", "orange", "green", "yellow"];
+  const colors = ["red", "blue", "orange", "green", "purple"];
   let lecStart = 0;
   let labStart = 0;
   let semStart = 0;
   let examStart = 0;
   let endDateIndex = 0;
-  let numCourses = 0;
-  let lecText = '';
-  let labText = '';
-  let semText = '';
-  let courseDate = '';
-  let startTimeString = '';
-  let endTimeString = '';
+  let lecText = "";
+  let labText = "";
+  let semText = "";
+  let courseDate = "";
+  let startTimeString = "";
+  let endTimeString = "";
   let indexes = [];
   let eventDays = [];
 
   // TODO: Update events
-  const events: any = [];
+  // const events: any = [];
 
   const handleChange = (e: any) => {
     setCourseName(e.target.value);
@@ -75,17 +77,42 @@ const Schedule = () => {
 
   const validEvent = (meeting: string, wanted: number, indexes: number[]) => {
     if (wanted == -1) {
-      return ""
+      return "";
     }
 
-    let endOfWanted = meeting.length - 1
+    let endOfWanted = meeting.length - 1;
     indexes.forEach(function (index) {
       if (index > wanted && index < endOfWanted && index != -1) {
         endOfWanted = index;
       }
-    })
-    return (meeting.substring(wanted, endOfWanted));
-  }
+    });
+    return meeting.substring(wanted, endOfWanted);
+  };
+
+  const addEvent = (meeting: string, start: number, text: string) => {
+    console.log(meeting);
+
+    courseDate = selectedCourse.meeting.substring(0, start);
+    endDateIndex = courseDate.indexOf("-");
+
+    eventDays = dayParse(text);
+
+    startTimeString = timeParse(text, 1);
+    endTimeString = timeParse(text, 2);
+
+    const newEvent = {
+      title: selectedCourse.name + meeting,
+      startTime: startTimeString,
+      endTime: endTimeString,
+      color: colors[numCourses],
+      daysOfWeek: eventDays,
+      allDay: false,
+      startRecur: courseDate.substring(0, endDateIndex),
+      endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
+    };
+
+    setEvents((events) => [...events, newEvent]);
+  };
 
   const dayParse = (string: string) => {
     const array = [];
@@ -105,36 +132,44 @@ const Schedule = () => {
       array.push(5);
     }
     return array;
-  }
+  };
 
   const timeParse = (string: string, i: number) => {
     const timeString = string.split(" ");
     const timeIndex = timeString.indexOf("-");
-    let parsedTimeString = '';
+    let parsedTimeString = "";
     let temp = 0;
 
     if (i == 1) {
       if (timeString[timeIndex - 1].includes("PM")) {
         temp = parseInt(timeString[timeIndex - 1].substring(0, 2));
-        temp = temp + 12;
+        if (temp != 12) {
+          temp = temp + 12;
+        }
         parsedTimeString = temp + timeString[timeIndex - 1].substring(2, 7);
-      }
-      else {
-        parsedTimeString = timeString[timeIndex - 1].substring(0, timeString[timeIndex - 1].length);
+      } else {
+        parsedTimeString = timeString[timeIndex - 1].substring(
+          0,
+          timeString[timeIndex - 1].length
+        );
       }
     }
     if (i == 2) {
       if (timeString[timeIndex + 1].includes("PM")) {
         temp = parseInt(timeString[timeIndex + 1].substring(0, 2));
-        temp = temp + 12;
+        if (temp != 12) {
+          temp = temp + 12;
+        }
         parsedTimeString = temp + timeString[timeIndex + 1].substring(2, 7);
-      }
-      else {
-        parsedTimeString = timeString[timeIndex + 1].substring(0, timeString[timeIndex - 1].length);
+      } else {
+        parsedTimeString = timeString[timeIndex + 1].substring(
+          0,
+          timeString[timeIndex - 1].length
+        );
       }
     }
-    return (parsedTimeString);
-  }
+    return parsedTimeString;
+  };
 
   const handleAddCourse = (newCourse: CourseType) => {
     if (selectedCourses.length < 5 && selectedCourses != undefined) {
@@ -145,9 +180,8 @@ const Schedule = () => {
         }
       });
       setSelectedCourses([...selectedCourses, newCourse]);
-      // TODO: Add course to "events" list
+
       // Add lecture events
-      console.log(selectedCourse.meeting);
       lecStart = selectedCourse.meeting.indexOf("LEC");
       labStart = selectedCourse.meeting.indexOf("LAB");
       semStart = selectedCourse.meeting.indexOf("SEM");
@@ -158,71 +192,32 @@ const Schedule = () => {
       labText = validEvent(selectedCourse.meeting, labStart, indexes);
       semText = validEvent(selectedCourse.meeting, semStart, indexes);
 
+      console.log(lecText);
+      console.log(labText);
+      console.log(semText);
+
       if (lecText != "") {
+        console.log("Lecture");
         // Add lecture event
-        courseDate = selectedCourse.meeting.substring(0, lecStart);
-        endDateIndex = courseDate.indexOf("-");
+        addEvent("Lecture", lecStart, lecText);
 
-        eventDays = dayParse(lecText);
-
-        startTimeString = timeParse(lecText, 1);
-        endTimeString = timeParse(lecText, 2);
-
-        events.push({
-          title: selectedCourse.name + "Lecture",
-          startTime: startTimeString,
-          endTime: endTimeString,
-          color: colors[numCourses],
-          daysOfWeek: eventDays,
-          allDay: false,
-          startRecur: courseDate.substring(0, endDateIndex),
-          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
-        });
+        console.log(events);
       }
       if (labText != "") {
+        console.log("Lab");
+
         // Add lab event
-        courseDate = selectedCourse.meeting.substring(0, labStart);
-        endDateIndex = courseDate.indexOf("-");
-
-        eventDays = dayParse(labText);
-
-        startTimeString = timeParse(labText, 1);
-        endTimeString = timeParse(labText, 2);
-
-        events.push({
-          title: selectedCourse.name + "Lab",
-          startTime: startTimeString,
-          endTime: endTimeString,
-          color: colors[numCourses],
-          daysOfWeek: eventDays,
-          allDay: false,
-          startRecur: courseDate.substring(0, endDateIndex),
-          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
-        });
+        addEvent("Lab", labStart, labText);
+        console.log(events);
       }
       if (semText != "") {
+        console.log("Seminar");
+
         // Add sem event
-        courseDate = selectedCourse.meeting.substring(0, semStart);
-        endDateIndex = courseDate.indexOf("-");
-
-        eventDays = dayParse(semText);
-
-        startTimeString = timeParse(semText, 1);
-        endTimeString = timeParse(semText, 2);
-
-        events.push({
-          title: selectedCourse.name + "Seminar",
-          startTime: startTimeString,
-          endTime: endTimeString,
-          color: colors[numCourses],
-          daysOfWeek: eventDays,
-          allDay: false,
-          startRecur: courseDate.substring(0, endDateIndex),
-          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
-        });
+        addEvent("Seminar", semStart, semText);
+        console.log(events);
       }
-      console.log(events);
-      numCourses++;
+      setNumCourses(numCourses + 1);
     } else {
       alert("Error: Number of courses exceeded");
     }
@@ -287,7 +282,11 @@ const Schedule = () => {
         </SubContainer>
 
         {/* Course Conflicts Component */}
-        <SubContainer></SubContainer>
+        <SubContainer>
+          {/* {events.map((event, i) => (
+            <p key={i}>{event.title}</p>
+          ))} */}
+        </SubContainer>
       </Container>
       <CalendarContainer>
         <FullCalendar
