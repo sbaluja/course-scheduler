@@ -18,6 +18,7 @@ import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { CourseType, CoursesType } from "../../utils/common_types";
+import internal from "stream";
 
 const Schedule = () => {
   const {
@@ -41,30 +42,24 @@ const Schedule = () => {
   });
   const [selectedCourses, setSelectedCourses] = useState<CoursesType>([]);
 
+  const colors = ["red", "blue", "orange", "green", "yellow"];
+  let lecStart = 0;
+  let labStart = 0;
+  let semStart = 0;
+  let examStart = 0;
+  let endDateIndex = 0;
+  let numCourses = 0;
+  let lecText = '';
+  let labText = '';
+  let semText = '';
+  let courseDate = '';
+  let startTimeString = '';
+  let endTimeString = '';
+  let indexes = [];
+  let eventDays = [];
+
   // TODO: Update events
-  const events = [
-    {
-      title: "Event1",
-      startTime: "15:30:00",
-      endTime: "16:30:00",
-      color: "red",
-      daysOfWeek: [2, 4],
-      allDay: false,
-      startRecur: "2022-09-08",
-      endRecur: "2022-12-05",
-    },
-    {
-      title: "Event2",
-      startTime: "12:30:00",
-      endTime: "2022-11-02T13:30:00",
-      color: "blue",
-      daysOfWeek: [1, 3],
-      allDay: false,
-      startRecur: "2022-09-08",
-      endRecur: "2022-12-05",
-    },
-    // etc...
-  ];
+  const events: any = [];
 
   const handleChange = (e: any) => {
     setCourseName(e.target.value);
@@ -78,6 +73,69 @@ const Schedule = () => {
 
   const handleCloseModal = () => setShow(false);
 
+  const validEvent = (meeting: string, wanted: number, indexes: number[]) => {
+    if (wanted == -1) {
+      return ""
+    }
+
+    let endOfWanted = meeting.length - 1
+    indexes.forEach(function (index) {
+      if (index > wanted && index < endOfWanted && index != -1) {
+        endOfWanted = index;
+      }
+    })
+    return (meeting.substring(wanted, endOfWanted));
+  }
+
+  const dayParse = (string: string) => {
+    const array = [];
+    if (string.includes("Mon")) {
+      array.push(1);
+    }
+    if (string.includes("Tues")) {
+      array.push(2);
+    }
+    if (string.includes("Wed")) {
+      array.push(3);
+    }
+    if (string.includes("Thur")) {
+      array.push(4);
+    }
+    if (string.includes("Fri")) {
+      array.push(5);
+    }
+    return array;
+  }
+
+  const timeParse = (string: string, i: number) => {
+    const timeString = string.split(" ");
+    const timeIndex = timeString.indexOf("-");
+    let parsedTimeString = '';
+    let temp = 0;
+
+    if (i == 1) {
+      if (timeString[timeIndex - 1].includes("PM")) {
+        temp = parseInt(timeString[timeIndex - 1].substring(0, 2));
+        temp = temp + 12;
+        parsedTimeString = temp + timeString[timeIndex - 1].substring(2, 7);
+      }
+      else {
+        parsedTimeString = timeString[timeIndex - 1].substring(0, timeString[timeIndex - 1].length);
+      }
+    }
+    if (i == 2) {
+      if (timeString[timeIndex + 1].includes("PM")) {
+        temp = parseInt(timeString[timeIndex + 1].substring(0, 2));
+        temp = temp + 12;
+        parsedTimeString = temp + timeString[timeIndex + 1].substring(2, 7);
+      }
+      else {
+        parsedTimeString = timeString[timeIndex + 1].substring(0, timeString[timeIndex - 1].length);
+      }
+    }
+    return (parsedTimeString);
+  }
+
   const handleAddCourse = (newCourse: CourseType) => {
     if (selectedCourses.length < 5 && selectedCourses != undefined) {
       // Handles duplicates
@@ -88,6 +146,83 @@ const Schedule = () => {
       });
       setSelectedCourses([...selectedCourses, newCourse]);
       // TODO: Add course to "events" list
+      // Add lecture events
+      console.log(selectedCourse.meeting);
+      lecStart = selectedCourse.meeting.indexOf("LEC");
+      labStart = selectedCourse.meeting.indexOf("LAB");
+      semStart = selectedCourse.meeting.indexOf("SEM");
+      examStart = selectedCourse.meeting.indexOf("EXAM");
+      indexes = [lecStart, labStart, semStart, examStart];
+
+      lecText = validEvent(selectedCourse.meeting, lecStart, indexes);
+      labText = validEvent(selectedCourse.meeting, labStart, indexes);
+      semText = validEvent(selectedCourse.meeting, semStart, indexes);
+
+      if (lecText != "") {
+        // Add lecture event
+        courseDate = selectedCourse.meeting.substring(0, lecStart);
+        endDateIndex = courseDate.indexOf("-");
+
+        eventDays = dayParse(lecText);
+
+        startTimeString = timeParse(lecText, 1);
+        endTimeString = timeParse(lecText, 2);
+
+        events.push({
+          title: selectedCourse.name + "Lecture",
+          startTime: startTimeString,
+          endTime: endTimeString,
+          color: colors[numCourses],
+          daysOfWeek: eventDays,
+          allDay: false,
+          startRecur: courseDate.substring(0, endDateIndex),
+          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
+        });
+      }
+      if (labText != "") {
+        // Add lab event
+        courseDate = selectedCourse.meeting.substring(0, labStart);
+        endDateIndex = courseDate.indexOf("-");
+
+        eventDays = dayParse(labText);
+
+        startTimeString = timeParse(labText, 1);
+        endTimeString = timeParse(labText, 2);
+
+        events.push({
+          title: selectedCourse.name + "Lab",
+          startTime: startTimeString,
+          endTime: endTimeString,
+          color: colors[numCourses],
+          daysOfWeek: eventDays,
+          allDay: false,
+          startRecur: courseDate.substring(0, endDateIndex),
+          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
+        });
+      }
+      if (semText != "") {
+        // Add sem event
+        courseDate = selectedCourse.meeting.substring(0, semStart);
+        endDateIndex = courseDate.indexOf("-");
+
+        eventDays = dayParse(semText);
+
+        startTimeString = timeParse(semText, 1);
+        endTimeString = timeParse(semText, 2);
+
+        events.push({
+          title: selectedCourse.name + "Seminar",
+          startTime: startTimeString,
+          endTime: endTimeString,
+          color: colors[numCourses],
+          daysOfWeek: eventDays,
+          allDay: false,
+          startRecur: courseDate.substring(0, endDateIndex),
+          endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
+        });
+      }
+      console.log(events);
+      numCourses++;
     } else {
       alert("Error: Number of courses exceeded");
     }
