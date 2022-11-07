@@ -20,6 +20,7 @@ import Button from "react-bootstrap/Button";
 import { CourseType, CoursesType } from "../../utils/common_types";
 import internal from "stream";
 import { EventType } from "./Schedule.types";
+import { exit } from "process";
 
 const Schedule = () => {
   const {
@@ -45,12 +46,13 @@ const Schedule = () => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [numCourses, setNumCourses] = useState<number>(0);
 
-  const colors = ["red", "blue", "orange", "green", "purple"];
+  const colors = ["red", "blue", "orange", "green", "purple", "brown", "darkslategrey", "olivedrab", "black", "darksalmon"];
   let lecStart = 0;
   let labStart = 0;
   let semStart = 0;
   let examStart = 0;
   let endDateIndex = 0;
+  let duplicateFlag = 0;
   let lecText = "";
   let labText = "";
   let semText = "";
@@ -102,7 +104,6 @@ const Schedule = () => {
 
   const addEvent = (meeting: string, start: number, text: string) => {
     courseDate = selectedCourse.meeting.substring(start - 22, start);
-    console.log(courseDate);
     endDateIndex = courseDate.indexOf("-");
 
     eventDays = dayParse(text);
@@ -186,9 +187,16 @@ const Schedule = () => {
       // Handles duplicates
       selectedCourses.forEach((course) => {
         if (course.name == newCourse.name) {
+          duplicateFlag = 1;
           alert("Error: Course has already been added");
         }
       });
+      if (duplicateFlag == 1) {
+        duplicateFlag = 0;
+        setShow(false);
+        return;
+      }
+
       setSelectedCourses([...selectedCourses, newCourse]);
 
       // Add lecture events
@@ -232,32 +240,12 @@ const Schedule = () => {
 
     setSelectedCourses(updatedCourses);
 
-    console.log(courseName);
-
     let updatedEvents: EventType[] = [];
     if (events != undefined) {
       updatedEvents = events.filter((event) => {
         return !event.title.includes(courseName);
       });
     }
-
-    setNumCourses((numCourses) => 0);
-    let temp = '';
-    console.log(numCourses);
-
-    // Update colours
-    updatedEvents.forEach((event, i) => {
-      if (temp == '') {
-        event.color = colors[numCourses];
-      }
-      else if (event.title.includes(temp)) {
-        event.color = colors[numCourses];
-      }
-      else {
-        setNumCourses(numCourses + 1);
-      }
-      temp = event.title;
-    });
 
     setEvents(updatedEvents);
     setShowRemove(false);
@@ -306,13 +294,6 @@ const Schedule = () => {
               ))}
             </List>
           </SelectedCoursesContainer>
-        </SubContainer>
-
-        {/* Course Conflicts Component */}
-        <SubContainer>
-          {/* {events.map((event, i) => (
-            <p key={i}>{event.title}</p>
-          ))} */}
         </SubContainer>
       </Container>
       <CalendarContainer>

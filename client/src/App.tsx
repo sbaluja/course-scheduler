@@ -32,7 +32,7 @@ const App = () => {
         course.name
           .toLowerCase()
           .replace("*", "")
-          .includes(query.replace("*", ""))
+          .includes(query.toLowerCase().replace("*", ""))
       )
     );
   };
@@ -52,32 +52,6 @@ const App = () => {
         setError(true);
       },
     });
-
-    $.ajax({
-      url: "http://localhost:5000/get-schedule",
-      dataType: "json",
-      async: false,
-      type: "POST",
-      data: {
-        course1: "VETM*4870*0102 (0325) Clinical Medicine III",
-        course2: "SOC*2700*01 (9228) Criminological Theory",
-        course3: "PHIL*4720*02 (8917) Directed Reading",
-        course4: "MBG*3350*0103 (8546) Lab Methods in Molecular Biol",
-        course5: "MCS*4910*02 (9513) Topics in Consumer Studies",
-      },
-      success: (response: JSON) => {
-        //TODO: Parse json array and create event objects array
-
-        console.log(response);
-        console.log("success");
-      },
-      error: () => {
-        setError(true);
-        console.log("error");
-      },
-    });
-
-    setCoursesLoading(false);
   };
 
   useEffect(() => {
