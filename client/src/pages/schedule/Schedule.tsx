@@ -90,7 +90,8 @@ const Schedule = () => {
   };
 
   const addEvent = (meeting: string, start: number, text: string) => {
-    courseDate = selectedCourse.meeting.substring(0, start);
+    courseDate = selectedCourse.meeting.substring(start - 22, start);
+    console.log(courseDate);
     endDateIndex = courseDate.indexOf("-");
 
     eventDays = dayParse(text);
@@ -105,8 +106,8 @@ const Schedule = () => {
       color: colors[numCourses],
       daysOfWeek: eventDays,
       allDay: false,
-      startRecur: courseDate.substring(0, endDateIndex),
-      endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1),
+      startRecur: courseDate.substring(0, endDateIndex).replaceAll("/", "-"),
+      endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1).replaceAll("/", "-"),
     };
 
     setEvents((events) => [...events, newEvent]);
@@ -230,8 +231,22 @@ const Schedule = () => {
     }
 
     setNumCourses(0);
+    let temp = '';
+    console.log(numCourses);
 
     // Update colours
+    updatedEvents.forEach((event, i) => {
+      if (temp == '') {
+        event.color = colors[numCourses];
+      }
+      else if (event.title.includes(temp)) {
+        event.color = colors[numCourses];
+      }
+      else {
+        setNumCourses(numCourses + 1);
+      }
+      temp = event.title;
+    });
 
     setEvents(updatedEvents);
   };
