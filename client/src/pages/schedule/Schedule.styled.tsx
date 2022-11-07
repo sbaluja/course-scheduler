@@ -44,6 +44,13 @@ export const ScrollableContainer = styled.div`
   overflow-y: scroll;
 `;
 
+export const RemoveContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const RemovableCourse = styled.span`
   :hover {
     cursor: pointer;

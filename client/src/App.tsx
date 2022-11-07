@@ -52,6 +52,8 @@ const App = () => {
         setError(true);
       },
     });
+
+    setCoursesLoading(false);
   };
 
   useEffect(() => {

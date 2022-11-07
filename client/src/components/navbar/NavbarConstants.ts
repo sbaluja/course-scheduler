@@ -10,12 +10,12 @@ export const pages: Array<LinkType> = [
     link: "/courses"
   },
   {
-    name: "page3",
-    link: "/page3"
-  },
-  {
     name: "schedule",
     link: "/schedule"
+  },
+  {
+    name: "page4",
+    link: "/page4"
   },
   {
     name: "page5",

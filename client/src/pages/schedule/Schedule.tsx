@@ -18,9 +18,9 @@ import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { CourseType, CoursesType } from "../../utils/common_types";
-import internal from "stream";
 import { EventType } from "./Schedule.types";
-import { exit } from "process";
+import { FiTrash2 } from "react-icons/fi";
+import { BsPlusCircle } from "react-icons/bs";
 
 const Schedule = () => {
   const {
@@ -46,7 +46,18 @@ const Schedule = () => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [numCourses, setNumCourses] = useState<number>(0);
 
-  const colors = ["red", "blue", "orange", "green", "purple", "brown", "darkslategrey", "olivedrab", "black", "darksalmon"];
+  const colors = [
+    "red",
+    "blue",
+    "orange",
+    "green",
+    "purple",
+    "brown",
+    "darkslategrey",
+    "olivedrab",
+    "black",
+    "darksalmon",
+  ];
   let lecStart = 0;
   let labStart = 0;
   let semStart = 0;
@@ -119,7 +130,9 @@ const Schedule = () => {
       daysOfWeek: eventDays,
       allDay: false,
       startRecur: courseDate.substring(0, endDateIndex).replaceAll("/", "-"),
-      endRecur: courseDate.substring(endDateIndex + 1, courseDate.length - 1).replaceAll("/", "-"),
+      endRecur: courseDate
+        .substring(endDateIndex + 1, courseDate.length - 1)
+        .replaceAll("/", "-"),
     };
 
     setEvents((events) => [...events, newEvent]);
@@ -197,8 +210,6 @@ const Schedule = () => {
         return;
       }
 
-      setSelectedCourses([...selectedCourses, newCourse]);
-
       // Add lecture events
       lecStart = selectedCourse.meeting.indexOf("LEC");
       labStart = selectedCourse.meeting.indexOf("LAB");
@@ -210,19 +221,31 @@ const Schedule = () => {
       labText = validEvent(selectedCourse.meeting, labStart, indexes);
       semText = validEvent(selectedCourse.meeting, semStart, indexes);
 
-      if (lecText != "") {
-        // Add lecture event
-        addEvent("Lecture", lecStart, lecText);
+      if (
+        lecText.includes("TBA") ||
+        labText.includes("TBA") ||
+        semText.includes("TBA")
+      ) {
+        setSelectedCourses([...selectedCourses, newCourse]);
+        setShow(false);
+        return;
+      } else {
+        setSelectedCourses([...selectedCourses, newCourse]);
+
+        if (lecText != "") {
+          // Add lecture event
+          addEvent("Lecture", lecStart, lecText);
+        }
+        if (labText != "") {
+          // Add lab event
+          addEvent("Lab", labStart, labText);
+        }
+        if (semText != "") {
+          // Add sem event
+          addEvent("Seminar", semStart, semText);
+        }
+        setNumCourses(numCourses + 1);
       }
-      if (labText != "") {
-        // Add lab event
-        addEvent("Lab", labStart, labText);
-      }
-      if (semText != "") {
-        // Add sem event
-        addEvent("Seminar", semStart, semText);
-      }
-      setNumCourses(numCourses + 1);
     } else {
       alert("Error: Number of courses exceeded");
     }
@@ -262,7 +285,7 @@ const Schedule = () => {
               type="text"
               id="course"
               name="course"
-              placeholder="Acct*1220"
+              placeholder="Ex. CIS*3760"
               onChange={handleChange}
               value={courseName}
             />
@@ -274,6 +297,7 @@ const Schedule = () => {
                     value={course.name}
                     key={i}
                   >
+                    <BsPlusCircle /> &nbsp;
                     {course.name}
                   </ListItem>
                 ))}
@@ -289,7 +313,10 @@ const Schedule = () => {
             <List>
               {selectedCourses.map((course, i) => (
                 <li key={i} onClick={() => handleShowRemoveModal(course.name)}>
-                  <RemovableCourse>{course.name} </RemovableCourse>
+                  <RemovableCourse>
+                    <FiTrash2 />
+                    <span>&nbsp;&nbsp;{course.name}</span>
+                  </RemovableCourse>
                 </li>
               ))}
             </List>
