@@ -29,7 +29,14 @@ while IFS= read -r line; do
             else
                 # uninstall flow
                 echo "The package '$requirements' is installed. Attempting to uninstall..."
-                sudo apt remove $requirements -y
+
+                if [ $requirements == "nginx" ]
+                    then
+                        sudo apt remove $requirements nginx-common -y
+                else
+                    sudo apt remove $requirements -y
+                fi
+
             fi
 
         sudo apt autoremove -y
