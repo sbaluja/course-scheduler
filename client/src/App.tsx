@@ -37,6 +37,7 @@ const App = () => {
     );
   };
 
+  // Makes a request to fetch the list of UofG courses
   const fetchCourses = () => {
     setCoursesLoading(true);
 
@@ -56,6 +57,7 @@ const App = () => {
     setCoursesLoading(false);
   };
 
+  // Get courses on site load
   useEffect(() => {
     fetchCourses();
   }, []);

@@ -23,12 +23,11 @@ import { FiTrash2 } from "react-icons/fi";
 import { BsPlusCircle } from "react-icons/bs";
 
 const Schedule = () => {
-  const {
-    filteredCourses,
-    filterCourses,
-    courseName,
-    setCourseName,
-  } = useContext(CoursesContext);
+  // Course context
+  const { filteredCourses, filterCourses, courseName, setCourseName } =
+    useContext(CoursesContext);
+
+  // States
   const [show, setShow] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<CourseType>({
     Term: "",
@@ -44,7 +43,10 @@ const Schedule = () => {
   const [selectedCourses, setSelectedCourses] = useState<CoursesType>([]);
   const [events, setEvents] = useState<EventType[]>([]);
   const [numCourses, setNumCourses] = useState<number>(0);
+  const [showRemove, setShowRemove] = useState(false);
+  const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
 
+  // Variable declarations
   const colors = [
     "red",
     "blue",
@@ -72,22 +74,16 @@ const Schedule = () => {
   let indexes = [];
   let eventDays = [];
 
-  // TODO: Update events
-  // const events: any = [];
-
+  // Update search query and refilters courses
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCourseName(e.target.value);
     filterCourses(e.target.value);
   };
 
+  // Show modal with course information when user wants to add a course to schedule
   const handleShowModal = (course: CourseType) => {
     setSelectedCourse(course);
     setShow(true);
-  };
-
-  const handleShowRemoveModal = (courseName: string) => {
-    setSelectedRemoveCourse(courseName);
-    setShowRemove(true);
   };
 
   const handleCloseModal = () => {
@@ -95,9 +91,13 @@ const Schedule = () => {
     setShowRemove(false);
   };
 
-  const [showRemove, setShowRemove] = useState(false);
-  const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
+  // Shows confirmation modal to remove a course from schedule
+  const handleShowRemoveModal = (courseName: string) => {
+    setSelectedRemoveCourse(courseName);
+    setShowRemove(true);
+  };
 
+  // Checks if a course being added has valid lecture, lab, or seminar times and returns a meeting substring with its meeting time
   const validEvent = (meeting: string, wanted: number, indexes: number[]) => {
     if (wanted == -1) {
       return "";
@@ -112,6 +112,7 @@ const Schedule = () => {
     return meeting.substring(wanted, endOfWanted);
   };
 
+  // Creates a formatted course and is added to the list of courses
   const addEvent = (meeting: string, start: number, text: string) => {
     courseDate = selectedCourse.meeting.substring(start - 22, start);
     endDateIndex = courseDate.indexOf("-");
@@ -157,6 +158,7 @@ const Schedule = () => {
     return array;
   };
 
+  // Parses a lecture, lab, or seminar time
   const timeParse = (string: string, i: number) => {
     const timeString = string.split(" ");
     const timeIndex = timeString.indexOf("-");
@@ -194,6 +196,7 @@ const Schedule = () => {
     return parsedTimeString;
   };
 
+  // Handles adding a course to the schedule
   const handleAddCourse = (newCourse: CourseType) => {
     if (selectedCourses.length < 5 && selectedCourses != undefined) {
       // Handles duplicates
@@ -288,6 +291,7 @@ const Schedule = () => {
               onChange={handleChange}
               value={courseName}
             />
+            {/* Displays list of searched courses into a container */}
             <ScrollableContainer>
               <List>
                 {filteredCourses.map((course, i) => (
@@ -309,6 +313,7 @@ const Schedule = () => {
         <SubContainer>
           <SelectedCoursesContainer>
             <h2>Selected Courses</h2>
+            {/* Displays list of selected courses into a container */}
             <List>
               {selectedCourses.map((course, i) => (
                 <li key={i} onClick={() => handleShowRemoveModal(course.name)}>
@@ -371,6 +376,7 @@ const Schedule = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {/* Remove Modal */}
       <Modal show={showRemove} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
