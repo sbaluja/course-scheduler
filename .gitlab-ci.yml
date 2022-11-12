@@ -10,7 +10,7 @@ pylint:
   before_script:
     - python --version
     - pip install pylint
-    - sudo apt install python3-flask
+    - pip install flask
   script:
     - cd client/
     - pylint server.py
