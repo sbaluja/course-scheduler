@@ -24,7 +24,6 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const Schedule = () => {
   const {
-    currentCourses,
     filteredCourses,
     filterCourses,
     courseName,
@@ -76,7 +75,7 @@ const Schedule = () => {
   // TODO: Update events
   // const events: any = [];
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCourseName(e.target.value);
     filterCourses(e.target.value);
   };
