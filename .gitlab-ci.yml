@@ -1,8 +1,8 @@
 stages:
- - Lint
+ - linting
 
 eslint:
-  stage: Lint
+  stage: linting
   image: node
   script:
     - cd client
@@ -10,7 +10,7 @@ eslint:
     - npm run lint
 
 pylint:
-  stage: Lint
+  stage: linting
   image: registry.gitlab.com/mafda/python-linting
   script:
     - pylint server.py
