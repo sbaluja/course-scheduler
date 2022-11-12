@@ -6,6 +6,7 @@ eslint:
     - npm run lint
 
 pylint:
+  image: python3
   script:
     - pip install pylint
     - pylint server.py
