@@ -7,6 +7,7 @@ eslint:
 
 pylint:
   script:
+    - pip install pylint
     - pylint server.py
 
 build-job:
