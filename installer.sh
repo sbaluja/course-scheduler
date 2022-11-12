@@ -16,34 +16,37 @@ while IFS= read -r line; do
     # check if package exists and store in variable
     dpkg -s $requirements &> /dev/null
 
-    # read from variable
+    # read from variable, if package is not found
     if [ $? -ne 0 ]
         then
             # install flow
             echo "The package '$requirements' is not installed. Attempting to install..."
-            sudo apt update
-            sudo apt install $requirements -y
+
+            # npm-specific install flow
+            if [ $requirements == "npm" ]
+                then
+                    sudo apt-get install -y npm
+                    npm install -g n
+                    n lts
+                    n latest
+                    n prune
+            # npm-specific packages
+            elif [ $requirements == "fullcalendar" ] || [ $requirements == "jquery" ] || [ $requirements == "eslint" ]
+                then
+                    npm i $requirements
+            #pip-specific packages
+            elif [ $requirements == "pylint" ]
+                then
+                    pip install $requirements
+            # normal install flow
+            else
+                sudo apt update
+                sudo apt install $requirements -y
+            fi
+
         else
             # do nothing
-
-	    if [ $requirements != "npm" ]
-	        then
-	            echo "The package "$requirements" is already installed."
-	    fi
-    fi
-
-    if [ $requirements == "npm" ]
-        then
-             sudo apt-get install -y npm
-             npm install -g n
-             n lts
-             n latest
-             n prune
-    fi
-
-    if [ $requirements == "fullcalendar" ] || [ $requirements == "jquery" ]
-        then
-            npm i $requirements
+            echo "The package "$requirements" is already installed."
     fi
 
 done < "$input"

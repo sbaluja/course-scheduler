@@ -22,24 +22,27 @@ while IFS= read -r line; do
             # do nothing
             echo "The package '$requirements' is not installed."
         else
+            # uninstall flow
+            echo "The package '$requirements' is installed. Attempting to uninstall..."
 
-            if [ $requirements == "fullcalendar" ]
+            # npm-specific packages
+            if [ $requirements == "fullcalendar" ] || [ $requirements == "jquery" ] || [ $requirements == "eslint" ]
                 then
                     npm uninstall $requirements
+            # pip-specific packages
+            elif [ $requirements == "pylint" ]
+                then
+                    pip uninstall $requirements -y
+            # nginx-specific flow
+            elif [ $requirements == "nginx" ]
+                then
+                    sudo apt remove $requirements nginx-common -y
+            # normal uninstall flow
             else
-                # uninstall flow
-                echo "The package '$requirements' is installed. Attempting to uninstall..."
-
-                if [ $requirements == "nginx" ]
-                    then
-                        sudo apt remove $requirements nginx-common -y
-                else
-                    sudo apt remove $requirements -y
-                fi
-
+                sudo apt remove $requirements -y
             fi
 
-        sudo apt autoremove -y
+            sudo apt autoremove -y
     fi
 
 done < "$input"
