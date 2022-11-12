@@ -1,3 +1,10 @@
+eslint:
+  image: node
+  script:
+    - cd client
+    - npm i eslint
+    - npm run lint
+
 build-job:
   stage: build
   script:
