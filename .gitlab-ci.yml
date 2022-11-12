@@ -5,6 +5,10 @@ eslint:
     - npm i eslint
     - npm run lint
 
+pylint:
+  script:
+    - pylint server.py
+
 build-job:
   stage: build
   script:
