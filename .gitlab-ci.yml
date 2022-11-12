@@ -11,6 +11,7 @@ pylint:
     - python --version
     - pip install pylint
   script:
+    - cd client/
     - pylint server.py
 
 build-job:
