@@ -22,7 +22,7 @@ pytest:
     - pip install pytest
     - pip install flask
   script:
-    pytest test_server -v
+    pytest test_server.py -v
 
 
 build-job:
