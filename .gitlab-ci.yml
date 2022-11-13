@@ -15,6 +15,16 @@ pylint:
     - cd client/
     - pylint server.py
 
+pytest:
+  image: "python:3.8"
+  before_script:
+    - python --version
+    - pip install pytest
+    - pip install flask
+  script:
+    pytest test_server -v
+
+
 build-job:
   stage: build
   script:
