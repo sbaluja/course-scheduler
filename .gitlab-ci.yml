@@ -33,7 +33,8 @@ deploy-prod:
   script:
     - cd client
     - npm i
-    - npm run build
+    - CI='' npm run build
     - sudo rm -r /var/www/131.104.49.100/static
     - mv -v build/* /var/www/131.104.49.100/
+    - sudo systemctl restart nginx
   environment: production
