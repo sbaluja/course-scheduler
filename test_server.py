@@ -1,21 +1,26 @@
+""" This module is responsible for testing."""
+
 import pytest
-from flask import Flask, Response, make_response, request
 from client.server import app
 
 @pytest.fixture
 def client():
-    with app.test_client() as client:
-        yield client
+    """Function to set up testing client."""
+    with app.test_client() as my_client:
+        yield my_client
 
-def test_root(client):
-    resp = client.get('/')
+def test_root(my_client):
+    """Function to test root endpoint."""
+    resp = my_client.get('/')
     assert b'Hello World!' in resp.data
 
-def test_course_data(client):
-    resp = client.get('/courseData')
+def test_course_data(my_client):
+    """Function to test /courseData endpoint."""
+    resp = my_client.get('/courseData')
     assert len(resp.get_json()) == 3036
 
-def test_course_search(client):
+def test_course_search(my_client):
+    """Function to test /get-schedule endpoint."""
     headers = {
         "Access-Control-Allow-Origin" :  "*"
     }
@@ -27,5 +32,5 @@ def test_course_search(client):
         "course5" : "ZOO*4920*01 (9393) Lab Studies in Ornithology",
     }
 
-    response = client.post('/get-schedule', data=data, headers=headers)
+    response = my_client.post('/get-schedule', data=data, headers=headers)
     assert len(response.get_json()) == 5
