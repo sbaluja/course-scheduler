@@ -11,6 +11,7 @@ pylint:
     - python --version
     - pip install pylint
     - pip install flask
+    - pip install pytest
   script:
     - cd client/
     - pylint server.py
