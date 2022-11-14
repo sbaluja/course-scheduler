@@ -31,7 +31,8 @@ deploy-prod:
   tags:
     - deployment
   script:
-    - cd CIS3760/Prod
+    - pwd
+    - cd /home/socs/CIS3760/Prod
     - git pull
     - cd client
     - npm run build
