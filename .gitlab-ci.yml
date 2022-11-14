@@ -34,7 +34,7 @@ deploy-prod:
     - cd /home/socs/CIS3760/Prod
     - git pull && rfarre04
     - cd client
-    - sudo npm run build
+    - npm run build
     - sudo rm -r /var/www/131.104.49.100/static
     - mv -v build/* /var/www/131.104.49.100/
   environment: production
