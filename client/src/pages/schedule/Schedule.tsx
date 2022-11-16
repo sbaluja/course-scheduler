@@ -7,6 +7,14 @@ import {
   ScrollableContainer,
   Container,
   SubContainer,
+  FilterContainer,
+  ButtonContainer, 
+  FormContainer, 
+  FormContainerOuter, 
+  CreateTimeContainer,
+  CreateTimeContainerOuter,
+  ActiveTimeContainer,
+  ActiveTimeContainerOuter,
   Input,
   SelectedCoursesContainer,
   SearchContainer,
@@ -17,6 +25,7 @@ import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { CourseType, CoursesType } from "../../utils/common_types";
 import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
@@ -79,6 +88,75 @@ const Schedule = () => {
     setCourseName(e.target.value);
     filterCourses(e.target.value);
   };
+
+
+  // Reset active filters list
+  const resetFilters = () => {
+  
+    const dayList = document.getElementById("activeDayFilters");
+    if (dayList != null) dayList.innerHTML = "";
+    
+    const yearList = document.getElementById("activeYearFilters");
+    if (yearList != null) yearList.innerHTML = "";
+
+  };
+
+  // Update active filters list
+  const addFilters = () => {
+    
+    resetFilters();
+
+    // Add Days Excluded
+    const dayToggles = document.getElementById("dayToggles");
+    if (dayToggles != null) {
+      const ul = document.getElementById("activeDayFilters");
+      const childElements = Object.values(dayToggles.childNodes) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked){
+          const li = document.createElement("li");
+          const day = childEl.children[0].getAttribute("name");
+          if (day != null){
+            li.appendChild(document.createTextNode(day));
+            ul?.append(li);
+          }
+        }
+      }
+    }
+
+    // Add Years Excluded
+    const yearToggles = document.getElementById("yearToggles");
+    if (yearToggles != null) {
+      const ul = document.getElementById("activeYearFilters");
+      const childElements = Object.values(yearToggles.childNodes) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked){
+          const li = document.createElement("li");
+          const day = childEl.children[0].getAttribute("name");
+          if (day != null){
+            li.appendChild(document.createTextNode(day));
+            ul?.append(li);
+          }
+        }
+      }
+    }
+      
+
+  };
+
+  // TODO:
+  // 1. Create new UI elements for users to create filter
+  // 2. Create new UI elements to display active filters
+  // 3. Create new UI elements to remove active filters
+  // 4. Make filters functional
+  //// 4a. Search courses and find matching critera
+  //// 4b. Compile new array and return results 
+  //// 4c. Recompile array on filter add/remove 
+
+  // // Update filter query and returns courses matching filter
+  // const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setCourseName(e.target.value);
+  //   filterCourses(e.target.value);
+  // }
 
   // Show modal with course information when user wants to add a course to schedule
   const handleShowModal = (course: CourseType) => {
@@ -279,6 +357,114 @@ const Schedule = () => {
   return (
     <Layout>
       <Container>
+
+        {/* Search Component */}
+        <FilterContainer>
+          <h2>Create Filters</h2>
+
+            <FormContainerOuter>
+              <FormContainer>
+                <Form id="dayToggles"> 
+                  <Form.Check type="switch" name="Monday" label="Monday"/>
+                  <Form.Check type="switch" name="Tuesday" label="Tuesday"/>
+                  <Form.Check type="switch" name="Wednesday" label="Wednesday"/>
+                  <Form.Check type="switch" name="Thursday" label="Thursday"/>
+                  <Form.Check type="switch" name="Friday" label="Friday"/>
+                </Form>
+              </FormContainer>
+              <FormContainer>
+                <Form id="yearToggles">
+                  <Form.Check type="switch" name="First Year" label="First Year"/>
+                  <Form.Check type="switch" name="Second Year" label="Second Year"/>
+                  <Form.Check type="switch" name="Third Year" label="Third Year"/>
+                  <Form.Check type="switch" name="Fourth Year" label="Fourth Year"/>
+                  <Form.Check type="switch" name="Graduate" label="Graduate"/>
+                </Form>
+              </FormContainer>
+            </FormContainerOuter>
+
+            <CreateTimeContainerOuter>
+              <CreateTimeContainer>
+                Start Time
+                <Input type="text" style={{width:"40px"}}/>
+              </CreateTimeContainer>
+              <CreateTimeContainer>
+                <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-start"}/>
+              </CreateTimeContainer>
+
+              <CreateTimeContainer>
+                End Time
+                <Input type="text" style={{width:"40px"}}/>
+              </CreateTimeContainer>
+              <CreateTimeContainer>
+                <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-end"}/>
+              </CreateTimeContainer>
+            </CreateTimeContainerOuter>
+
+          <ButtonContainer>
+            <Button variant="primary" id="addFilterBtn" onClick={addFilters}>
+              Add Filter
+            </Button>
+          </ButtonContainer>
+       </FilterContainer>
+
+
+        {/* Active Filter Component */}
+        <FilterContainer>
+          <h2>Active Filters</h2>
+          <FormContainerOuter>
+            <FormContainer>
+              <List>
+                <b>Excluded Days</b>
+                <ul id="activeDayFilters">
+                </ul>
+              </List>
+            </FormContainer>
+            <FormContainer>
+              <List>
+                <b>Excluded Years</b>
+                <ul id="activeYearFilters">
+                </ul>
+              </List>
+            </FormContainer>
+          </FormContainerOuter>
+
+          <ActiveTimeContainerOuter>
+            <ActiveTimeContainer>
+              <List>
+                <b>Start Time</b>
+                <div id="activeStartTimes">
+                  <li>8:00 AM</li>
+                </div>
+              </List>
+            </ActiveTimeContainer>
+            <ActiveTimeContainer>
+              <List>
+                <br/>
+                <div id="activeTimeDashes">
+                  <li>-</li>
+                </div>
+              </List>
+            </ActiveTimeContainer>
+            <ActiveTimeContainer>
+              <List>
+                <b>End Time</b>
+                <div id="activeEndTimes">
+                  <li>10:15 AM</li>
+                </div>
+              </List>
+            </ActiveTimeContainer>
+          </ActiveTimeContainerOuter>
+
+          <ButtonContainer>
+            <Button variant="danger" id="rmFilterBtn" onClick={resetFilters}>
+              Reset Filter
+            </Button>
+          </ButtonContainer>
+        </FilterContainer>
+
+
+
         {/* Search Component */}
         <SubContainer>
           <SearchContainer>
