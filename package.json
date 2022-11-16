@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "eslint": "^8.27.0",
     "fullcalendar": "^5.11.3",
     "jquery": "^3.6.1"
   }
