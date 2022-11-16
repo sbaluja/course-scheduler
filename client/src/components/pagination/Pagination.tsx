@@ -7,7 +7,7 @@ const Pagination: React.FC = () => {
     const items = [];
 
     if (currentPage > 1) {
-        items.push(<BPagination.Prev key="prev" onClick={() => paginate(currentPage - 1)} />)
+        items.push(<BPagination.Prev key="prev" onClick={() => paginate(currentPage - 1)} />);
     }
 
     for (let page = 1; page <= Math.ceil(totalCourses / coursesPerPage); page++) {
@@ -15,16 +15,16 @@ const Pagination: React.FC = () => {
             <BPagination.Item key={page} active={page === currentPage} onClick={() => paginate(page)}>
                 {page}
             </BPagination.Item>
-        )
+        );
     }
 
     if (currentPage < totalCourses / coursesPerPage) {
-        items.push(<BPagination.Next key="next" onClick={() => paginate(currentPage + 1)} />)
+        items.push(<BPagination.Next key="next" onClick={() => paginate(currentPage + 1)} />);
     }
 
     return (
         <BPagination>{items}</BPagination>
-    )
-}
+    );
+};
 
 export default Pagination;
