@@ -83,25 +83,65 @@ const Schedule = () => {
   let indexes = [];
   let eventDays = [];
 
+
   // Update search query and refilters courses
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCourseName(e.target.value);
     filterCourses(e.target.value);
   };
 
+  // Update courses to search through based off filters
+  const handleFilters = () => {
+
+    addFilters();
+
+
+    // filterCoursesByDay();
+
+
+    // Add Years Excluded
+    const excludedYears = [];
+    const allYears = ["First Year", "Second Year", "Third Year", "Fourth Year", "Graduate"];
+    const yearToggles = document.getElementById("yearToggles");
+    if (yearToggles != null) {
+      const childElements = Object.values(yearToggles.childNodes) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked){
+          const year = childEl.children[0].getAttribute("name");
+          if (year != null){
+            excludedYears.push(year);
+          }
+        }
+      }
+    }
+    filterCoursesByYear(excludedYears.length == 0? allYears : excludedYears);
+
+    // filterCoursesByTime();
+
+  };
+
 
   // Reset active filters list
   const resetFilters = () => {
   
+
+    // Reset Days
     const dayList = document.getElementById("activeDayFilters");
     if (dayList != null) dayList.innerHTML = "";
-    
+
+
+    // Reset Years
     const yearList = document.getElementById("activeYearFilters");
     if (yearList != null) yearList.innerHTML = "";
+    const allYears = ["First Year", "Second Year", "Third Year", "Fourth Year", "Graduate"];
+    filterCoursesByYear(allYears);
 
+    // Reset Start Time
     const start_ul = document.getElementById("activeStartTimes");
     if (start_ul != null) start_ul.innerHTML = "";
 
+
+    // Reset End Time
     const end_ul = document.getElementById("activeEndTimes");
     if (end_ul != null) end_ul.innerHTML = "";
 
@@ -137,9 +177,9 @@ const Schedule = () => {
       for (const childEl of childElements) {
         if ((childEl.children[0] as HTMLInputElement).checked){
           const li = document.createElement("li");
-          const day = childEl.children[0].getAttribute("name");
-          if (day != null){
-            li.appendChild(document.createTextNode(day));
+          const year = childEl.children[0].getAttribute("name");
+          if (year != null){
+            li.appendChild(document.createTextNode(year));
             ul?.append(li);
           }
         }
@@ -458,7 +498,7 @@ const Schedule = () => {
             </CreateTimeContainerOuter>
 
           <ButtonContainer>
-            <Button variant="primary" id="addFilterBtn" onClick={addFilters}>
+            <Button variant="primary" id="addFilterBtn" onClick={handleFilters}>
               Update Filter
             </Button>
           </ButtonContainer>
@@ -490,7 +530,6 @@ const Schedule = () => {
               <List>
                 <b>Start Time</b>
                 <div id="activeStartTimes">
-                  <li>8:00 AM</li>
                 </div>
               </List>
             </ActiveTimeContainer>
@@ -498,7 +537,6 @@ const Schedule = () => {
               <List>
                 <br/>
                 <div id="activeTimeDashes">
-                  <li>-</li>
                 </div>
               </List>
             </ActiveTimeContainer>
@@ -506,7 +544,6 @@ const Schedule = () => {
               <List>
                 <b>End Time</b>
                 <div id="activeEndTimes">
-                  <li>10:15 AM</li>
                 </div>
               </List>
             </ActiveTimeContainer>

@@ -14,6 +14,9 @@ interface CoursesContextInterface {
     setError: any;
     filteredCourses: CoursesType;
     filterCourses: any;
+    filterCoursesByDay: any;
+    filterCoursesByYear: any;
+    filterCoursesByTime: any;
     courseName: string;
     setCourseName: any;
 }
@@ -31,6 +34,9 @@ const defaultCoursesContext: CoursesContextInterface = {
     setError: null,
     filteredCourses: [],
     filterCourses: null,
+    filterCoursesByDay: null,
+    filterCoursesByYear: null,
+    filterCoursesByTime: null,
     courseName: "",
     setCourseName: null,
 };
