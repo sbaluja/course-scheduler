@@ -13,7 +13,7 @@ const Home: React.FC = () => {
           <h1 className="text-primary">CourseClub!</h1>
         </HeroText>
         <NavLink to="/courses">
-          <Button size="lg" variant="primary" className="mt-5">View Courses</Button>
+          <Button size="lg" variant="primary" className="mt-5">View All Courses</Button>
         </NavLink>
       </HeroContainer>
     </Layout>
