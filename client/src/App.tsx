@@ -113,7 +113,7 @@ const App = () => {
     setCoursesLoading(true);
 
     $.ajax({
-      url: "http://localhost:5000/courseData",
+      url: "https://131.104.49.100/courseData",
       dataType: "json",
       type: "get",
       success: (data) => {
