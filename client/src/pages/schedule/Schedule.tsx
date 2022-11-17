@@ -33,7 +33,7 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const Schedule = () => {
   // Course context
-  const { filteredCourses, filterCourses, courseName, setCourseName } =
+  const { filteredCourses, filterCourses, filterCoursesByDay, filterCoursesByTime, filterCoursesByYear, courseName, setCourseName } =
     useContext(CoursesContext);
 
   // States
@@ -99,6 +99,12 @@ const Schedule = () => {
     const yearList = document.getElementById("activeYearFilters");
     if (yearList != null) yearList.innerHTML = "";
 
+    const start_ul = document.getElementById("activeStartTimes");
+    if (start_ul != null) start_ul.innerHTML = "";
+
+    const end_ul = document.getElementById("activeEndTimes");
+    if (end_ul != null) end_ul.innerHTML = "";
+
   };
 
   // Update active filters list
@@ -139,9 +145,55 @@ const Schedule = () => {
         }
       }
     }
-      
+    
+    // Add Start Time Excluded
+    const start_ul = document.getElementById("activeStartTimes");
+    const startTime = document.getElementById("startTime") as HTMLInputElement;
+    if (start_ul != null) start_ul.innerHTML = "";
+    if (startTime.value){
+      const start_li = document.createElement("li");
+      const startHour = parseInt((startTime.value).substring(0,2));
+      const startMin = (startTime.value).substring(3,5);
+  
+      if (startHour < 12){
+        start_li.appendChild(document.createTextNode(startHour.toString() + ":" + startMin + " AM"));
+      } else if (startHour == 12){
+        start_li.appendChild(document.createTextNode((startHour).toString() + ":" + startMin + " PM"));
+      } else {
+        start_li.appendChild(document.createTextNode((startHour-12).toString() + ":" + startMin + " PM"));
+      }
+      start_ul?.append(start_li);
+    }
+
+
+    // Add End Time Excluded
+    const end_ul = document.getElementById("activeEndTimes");
+    const endTime = document.getElementById("endTime") as HTMLInputElement;
+    if (end_ul != null) end_ul.innerHTML = "";
+    if (endTime.value){
+      const end_li = document.createElement("li");
+      const endHour = parseInt((endTime.value).substring(0,2));
+      const endMin = (endTime.value).substring(3,5);
+  
+      if (endHour < 12){
+        end_li.appendChild(document.createTextNode(endHour.toString() + ":" + endMin + " AM"));
+      } else if (endHour == 12){
+        end_li.appendChild(document.createTextNode((endHour).toString() + ":" + endMin + " PM"));
+      } else {
+        end_li.appendChild(document.createTextNode((endHour-12).toString() + ":" + endMin + " PM"));
+      }
+      end_ul?.append(end_li);
+    }
+
+
+    // Checking for both start and end time entries
+    if (!(startTime.value && endTime.value)){
+      if (start_ul != null) start_ul.innerHTML = "";
+      if (end_ul != null) end_ul.innerHTML = "";
+    }
 
   };
+
 
   // TODO:
   // 1. Create new UI elements for users to create filter
@@ -386,24 +438,28 @@ const Schedule = () => {
             <CreateTimeContainerOuter>
               <CreateTimeContainer>
                 Start Time
-                <Input type="text" style={{width:"40px"}}/>
+                <Form>
+                  <Input type="time" id="startTime"/>
+                </Form>
               </CreateTimeContainer>
               <CreateTimeContainer>
-                <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-start"}/>
+                {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-start"}/> */}
               </CreateTimeContainer>
 
               <CreateTimeContainer>
                 End Time
-                <Input type="text" style={{width:"40px"}}/>
+                <Form>
+                  <Input type="time" id="endTime"/>
+                </Form>
               </CreateTimeContainer>
               <CreateTimeContainer>
-                <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-end"}/>
+                {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-end"}/> */}
               </CreateTimeContainer>
             </CreateTimeContainerOuter>
 
           <ButtonContainer>
             <Button variant="primary" id="addFilterBtn" onClick={addFilters}>
-              Add Filter
+              Update Filter
             </Button>
           </ButtonContainer>
        </FilterContainer>
