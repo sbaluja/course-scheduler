@@ -39,6 +39,16 @@ export const ButtonContainer = styled.div`
   padding-block: 2rem;
 `;
 
+export const ExportContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 2.3rem;
+  width: 8rem;
+`;
+
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -159,4 +169,5 @@ export const SelectionContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-block: 2rem 1rem;
+  padding-right: 20px;
 `;

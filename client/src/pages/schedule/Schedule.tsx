@@ -9,6 +9,7 @@ import {
   SubContainer,
   FilterContainer,
   ButtonContainer,
+  ExportContainer,
   FormContainer,
   FormContainerOuter,
   CreateTimeContainer,
@@ -32,6 +33,9 @@ import { CourseType, CoursesType } from "../../utils/common_types";
 import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
 import { BsPlusCircle } from "react-icons/bs";
+import  ics from "ical"
+import { ModalDialog } from "react-bootstrap";
+
 
 const Schedule = () => {
   // Course context
@@ -523,6 +527,10 @@ const Schedule = () => {
     setShowRemove(false);
   };
 
+  const exportCourses = () => {
+    alert("Feature coming soon");
+  };
+
   return (
     <Layout>
       <SelectionContainer>
@@ -538,6 +546,11 @@ const Schedule = () => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        <ExportContainer>
+          <Button variant="danger" id="exportBtn" onClick={exportCourses}>
+              Export
+          </Button>
+        </ExportContainer>  
       </SelectionContainer>
       <Container>
         {/* Search Component */}
