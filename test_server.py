@@ -22,7 +22,7 @@ def test_fall_course_data(client):
 def test_winter_courseData(client):
     """Function to test /winterCourseData endpoint."""
     resp = client.get('/winterCourseData')
-    assert len(resp.get_json()) == 3036
+    assert len(resp.get_json()) == 2792
 
 def test_course_search(client):
     """Function to test /get-schedule endpoint."""

@@ -38,6 +38,10 @@ const App = () => {
     );
   };
 
+  useEffect(() => {
+    console.log(courses.length);
+  }, [courses]);
+
   // Filter courses by days
   const filterCoursesByDay = (query: string) => {
     setFilteredCourses(
@@ -133,7 +137,6 @@ const App = () => {
         setError(true);
       },
     });
-    console.log(courses.length);
     setCoursesLoading(false);
   };
 
