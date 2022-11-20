@@ -32,11 +32,11 @@ deploy-prod:
     - deployment
   script:
     - cd client
-    - npm i
     - npm cache clean -f
     - npm install -g n
     - sudo n stable
     - sudo n latest
+    - npm i
     - CI='' npm run build
     - sudo rm -rf /var/www/131.104.49.100/static
     - sudo mv -v build/* /var/www/131.104.49.100/
