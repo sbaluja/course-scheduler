@@ -32,7 +32,7 @@ deploy-prod:
     - deployment
   script:
     - cd client
-    - npm i
+    - npm install --omit=dev
     - CI='' npm run build
     - sudo rm -rf /var/www/131.104.49.100/static
     - sudo mv -v build/* /var/www/131.104.49.100/
