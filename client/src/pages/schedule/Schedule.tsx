@@ -662,7 +662,7 @@ const Schedule = () => {
           <FormContainerOuter>
             <FormContainer>
               <List>
-                <b>Excluded Days</b>
+                <b>Included Days</b>
                 <ul id="activeDayFilters"></ul>
               </List>
             </FormContainer>
