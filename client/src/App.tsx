@@ -117,7 +117,7 @@ const App = () => {
   const fetchCourses = (term: string) => {
     setCoursesLoading(true);
 
-    const prodUrl = `https://131.104.49.100/${term}CourseData`;
+    const prodUrl = `http://131.104.49.100/${term}CourseData`;
     const devUrl = `http://127.0.0.1:5000/${term}CourseData`;
 
     $.ajax({
