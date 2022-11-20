@@ -668,7 +668,7 @@ const Schedule = () => {
             </FormContainer>
             <FormContainer>
               <List>
-                <b>Excluded Years</b>
+                <b>Included Years</b>
                 <ul id="activeYearFilters"></ul>
               </List>
             </FormContainer>
