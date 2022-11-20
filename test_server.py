@@ -19,7 +19,7 @@ def test_fall_course_data(client):
     resp = client.get('/fallCourseData')
     assert len(resp.get_json()) == 3036
 
-def test_winter_courseData(client):
+def test_winter_course_data(client):
     """Function to test /winterCourseData endpoint."""
     resp = client.get('/winterCourseData')
     assert len(resp.get_json()) == 2792
