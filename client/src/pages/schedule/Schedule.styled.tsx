@@ -99,7 +99,6 @@ export const CreateTimeContainerOuter = styled.div`
   padding-block: 1rem;
 `;
 
-
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -154,4 +153,10 @@ export const ListItem = styled.li`
     opacity: 90%;
     color: #0d6efd;
   }
+`;
+
+export const SelectionContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-block: 2rem 1rem;
 `;

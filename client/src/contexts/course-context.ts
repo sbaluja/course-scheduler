@@ -19,6 +19,8 @@ interface CoursesContextInterface {
     filterCoursesByTime: any;
     courseName: string;
     setCourseName: any;
+    term: string;
+    setTerm: any;
 }
 
 const defaultCoursesContext: CoursesContextInterface = {
@@ -39,6 +41,8 @@ const defaultCoursesContext: CoursesContextInterface = {
     filterCoursesByTime: null,
     courseName: "",
     setCourseName: null,
+    term: "fall",
+    setTerm: null,
 };
 
 export const CoursesContext = createContext<CoursesContextInterface>(

@@ -5,13 +5,29 @@ import { Container, Grid } from "./Courses.styled";
 import Spinner from "react-bootstrap/Spinner";
 import { CoursesContext } from "../../contexts/course-context";
 import { Pagination } from "../../components/pagination";
+import { SelectionContainer } from "./Courses.styled";
+import Dropdown from "react-bootstrap/Dropdown";
 
 const Courses = () => {
-  const { currentCourses, coursesLoading, error } =
+  const { currentCourses, coursesLoading, error, term, setTerm } =
     useContext(CoursesContext);
 
   return (
     <Layout>
+      <SelectionContainer>
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            {term === "fall" ? "Fall 2022" : "Winter 2023"}
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setTerm("fall")}>Fall</Dropdown.Item>
+            <Dropdown.Item onClick={() => setTerm("winter")}>
+              Winter
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </SelectionContainer>
       <Container>
         {coursesLoading ? (
           <Spinner animation="border" role="status">

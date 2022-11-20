@@ -162,6 +162,8 @@ const App = () => {
           filterCoursesByTime,
           courseName,
           setCourseName,
+          term,
+          setTerm,
         }}
       >
         <Routes>

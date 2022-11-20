@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Layout } from "../../components/layout";
 import { CoursesContext } from "../../contexts/course-context";
 import {
@@ -8,9 +8,9 @@ import {
   Container,
   SubContainer,
   FilterContainer,
-  ButtonContainer, 
-  FormContainer, 
-  FormContainerOuter, 
+  ButtonContainer,
+  FormContainer,
+  FormContainerOuter,
   CreateTimeContainer,
   CreateTimeContainerOuter,
   ActiveTimeContainer,
@@ -20,12 +20,14 @@ import {
   SearchContainer,
   RemovableCourse,
   CalendarContainer,
+  SelectionContainer,
 } from "./Schedule.styled";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Dropdown from "react-bootstrap/Dropdown";
 import { CourseType, CoursesType } from "../../utils/common_types";
 import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
@@ -33,8 +35,23 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const Schedule = () => {
   // Course context
-  const { filteredCourses, filterCourses, filterCoursesByDay, filterCoursesByTime, filterCoursesByYear, courseName, setCourseName } =
-    useContext(CoursesContext);
+  const {
+    filteredCourses,
+    filterCourses,
+    filterCoursesByDay,
+    filterCoursesByTime,
+    filterCoursesByYear,
+    courseName,
+    setCourseName,
+    term,
+    setTerm,
+  } = useContext(CoursesContext);
+
+  useEffect(() => {
+    setSelectedCourses([]);
+    setEvents([]);
+    setNumCourses(0);
+  }, [term]);
 
   // States
   const [show, setShow] = useState(false);
@@ -83,7 +100,6 @@ const Schedule = () => {
   let indexes = [];
   let eventDays = [];
 
-
   // Update search query and refilters courses
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCourseName(e.target.value);
@@ -92,76 +108,81 @@ const Schedule = () => {
 
   // Update courses to search through based off filters
   const handleFilters = () => {
-
     addFilters();
-
 
     // filterCoursesByDay();
 
-
     // Add Years Excluded
     const excludedYears = [];
-    const allYears = ["First Year", "Second Year", "Third Year", "Fourth Year", "Graduate"];
+    const allYears = [
+      "First Year",
+      "Second Year",
+      "Third Year",
+      "Fourth Year",
+      "Graduate",
+    ];
     const yearToggles = document.getElementById("yearToggles");
     if (yearToggles != null) {
-      const childElements = Object.values(yearToggles.childNodes) as HTMLElement[];
+      const childElements = Object.values(
+        yearToggles.childNodes
+      ) as HTMLElement[];
       for (const childEl of childElements) {
-        if ((childEl.children[0] as HTMLInputElement).checked){
+        if ((childEl.children[0] as HTMLInputElement).checked) {
           const year = childEl.children[0].getAttribute("name");
-          if (year != null){
+          if (year != null) {
             excludedYears.push(year);
           }
         }
       }
     }
-    filterCoursesByYear(excludedYears.length == 0? allYears : excludedYears);
+    filterCoursesByYear(excludedYears.length == 0 ? allYears : excludedYears);
 
     // filterCoursesByTime();
-
   };
-
 
   // Reset active filters list
   const resetFilters = () => {
-  
-
     // Reset Days
     const dayList = document.getElementById("activeDayFilters");
     if (dayList != null) dayList.innerHTML = "";
 
-
     // Reset Years
     const yearList = document.getElementById("activeYearFilters");
     if (yearList != null) yearList.innerHTML = "";
-    const allYears = ["First Year", "Second Year", "Third Year", "Fourth Year", "Graduate"];
+    const allYears = [
+      "First Year",
+      "Second Year",
+      "Third Year",
+      "Fourth Year",
+      "Graduate",
+    ];
     filterCoursesByYear(allYears);
 
     // Reset Start Time
     const start_ul = document.getElementById("activeStartTimes");
     if (start_ul != null) start_ul.innerHTML = "";
 
-
     // Reset End Time
     const end_ul = document.getElementById("activeEndTimes");
     if (end_ul != null) end_ul.innerHTML = "";
-
   };
 
   // Update active filters list
   const addFilters = () => {
-    
     resetFilters();
 
     // Add Days Excluded
     const dayToggles = document.getElementById("dayToggles");
     if (dayToggles != null) {
       const ul = document.getElementById("activeDayFilters");
-      const childElements = Object.values(dayToggles.childNodes) as HTMLElement[];
+      const childElements = Object.values(
+        dayToggles.childNodes
+      ) as HTMLElement[];
       for (const childEl of childElements) {
-        if ((childEl.children[0] as HTMLInputElement).checked){
+        if ((childEl.children[0] as HTMLInputElement).checked) {
           const li = document.createElement("li");
           const day = childEl.children[0].getAttribute("name");
-          if (day != null){
+          if (day != null) {
             li.appendChild(document.createTextNode(day));
             ul?.append(li);
           }
@@ -173,67 +194,81 @@ const Schedule = () => {
     const yearToggles = document.getElementById("yearToggles");
     if (yearToggles != null) {
       const ul = document.getElementById("activeYearFilters");
-      const childElements = Object.values(yearToggles.childNodes) as HTMLElement[];
+      const childElements = Object.values(
+        yearToggles.childNodes
+      ) as HTMLElement[];
       for (const childEl of childElements) {
-        if ((childEl.children[0] as HTMLInputElement).checked){
+        if ((childEl.children[0] as HTMLInputElement).checked) {
           const li = document.createElement("li");
           const year = childEl.children[0].getAttribute("name");
-          if (year != null){
+          if (year != null) {
             li.appendChild(document.createTextNode(year));
             ul?.append(li);
           }
         }
       }
     }
-    
+
     // Add Start Time Excluded
     const start_ul = document.getElementById("activeStartTimes");
     const startTime = document.getElementById("startTime") as HTMLInputElement;
     if (start_ul != null) start_ul.innerHTML = "";
-    if (startTime.value){
+    if (startTime.value) {
       const start_li = document.createElement("li");
-      const startHour = parseInt((startTime.value).substring(0,2));
-      const startMin = (startTime.value).substring(3,5);
-  
-      if (startHour < 12){
-        start_li.appendChild(document.createTextNode(startHour.toString() + ":" + startMin + " AM"));
-      } else if (startHour == 12){
-        start_li.appendChild(document.createTextNode((startHour).toString() + ":" + startMin + " PM"));
+      const startHour = parseInt(startTime.value.substring(0, 2));
+      const startMin = startTime.value.substring(3, 5);
+
+      if (startHour < 12) {
+        start_li.appendChild(
+          document.createTextNode(startHour.toString() + ":" + startMin + " AM")
+        );
+      } else if (startHour == 12) {
+        start_li.appendChild(
+          document.createTextNode(startHour.toString() + ":" + startMin + " PM")
+        );
       } else {
-        start_li.appendChild(document.createTextNode((startHour-12).toString() + ":" + startMin + " PM"));
+        start_li.appendChild(
+          document.createTextNode(
+            (startHour - 12).toString() + ":" + startMin + " PM"
+          )
+        );
       }
       start_ul?.append(start_li);
     }
-
 
     // Add End Time Excluded
     const end_ul = document.getElementById("activeEndTimes");
     const endTime = document.getElementById("endTime") as HTMLInputElement;
     if (end_ul != null) end_ul.innerHTML = "";
-    if (endTime.value){
+    if (endTime.value) {
       const end_li = document.createElement("li");
-      const endHour = parseInt((endTime.value).substring(0,2));
-      const endMin = (endTime.value).substring(3,5);
-  
-      if (endHour < 12){
-        end_li.appendChild(document.createTextNode(endHour.toString() + ":" + endMin + " AM"));
-      } else if (endHour == 12){
-        end_li.appendChild(document.createTextNode((endHour).toString() + ":" + endMin + " PM"));
+      const endHour = parseInt(endTime.value.substring(0, 2));
+      const endMin = endTime.value.substring(3, 5);
+
+      if (endHour < 12) {
+        end_li.appendChild(
+          document.createTextNode(endHour.toString() + ":" + endMin + " AM")
+        );
+      } else if (endHour == 12) {
+        end_li.appendChild(
+          document.createTextNode(endHour.toString() + ":" + endMin + " PM")
+        );
       } else {
-        end_li.appendChild(document.createTextNode((endHour-12).toString() + ":" + endMin + " PM"));
+        end_li.appendChild(
+          document.createTextNode(
+            (endHour - 12).toString() + ":" + endMin + " PM"
+          )
+        );
       }
       end_ul?.append(end_li);
     }
 
-
     // Checking for both start and end time entries
-    if (!(startTime.value && endTime.value)){
+    if (!(startTime.value && endTime.value)) {
       if (start_ul != null) start_ul.innerHTML = "";
       if (end_ul != null) end_ul.innerHTML = "";
     }
-
   };
-
 
   // TODO:
   // 1. Create new UI elements for users to create filter
@@ -241,8 +276,8 @@ const Schedule = () => {
   // 3. Create new UI elements to remove active filters
   // 4. Make filters functional
   //// 4a. Search courses and find matching critera
-  //// 4b. Compile new array and return results 
-  //// 4c. Recompile array on filter add/remove 
+  //// 4b. Compile new array and return results
+  //// 4c. Recompile array on filter add/remove
 
   // // Update filter query and returns courses matching filter
   // const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -292,6 +327,19 @@ const Schedule = () => {
     startTimeString = timeParse(text, 1);
     endTimeString = timeParse(text, 2);
 
+    let startDate = "";
+    let endDate = "";
+
+    if (term === "fall") {
+      startDate = courseDate.substring(0, endDateIndex).replaceAll("/", "-");
+      endDate = courseDate
+        .substring(endDateIndex + 1, courseDate.length - 1)
+        .replaceAll("/", "-");
+    } else {
+      startDate = "2023-01-02";
+      endDate = "2023-04-14";
+    }
+
     const newEvent = {
       title: selectedCourse.name + meeting,
       startTime: startTimeString,
@@ -299,10 +347,8 @@ const Schedule = () => {
       color: colors[numCourses],
       daysOfWeek: eventDays,
       allDay: false,
-      startRecur: courseDate.substring(0, endDateIndex).replaceAll("/", "-"),
-      endRecur: courseDate
-        .substring(endDateIndex + 1, courseDate.length - 1)
-        .replaceAll("/", "-"),
+      startRecur: startDate,
+      endRecur: endDate,
     };
 
     setEvents((events) => [...events, newEvent]);
@@ -337,30 +383,60 @@ const Schedule = () => {
 
     if (i == 1) {
       if (timeString[timeIndex - 1].includes("PM")) {
-        temp = parseInt(timeString[timeIndex - 1].substring(0, 2));
+        if (term === "winter") {
+          temp = parseInt(
+            timeString[timeIndex - 1].substring(
+              timeString[timeIndex - 1].length - 7,
+              timeString[timeIndex - 1].length - 5
+            )
+          );
+        } else {
+          temp = parseInt(timeString[timeIndex - 1].substring(0, 2));
+        }
         if (temp != 12) {
           temp = temp + 12;
         }
-        parsedTimeString = temp + timeString[timeIndex - 1].substring(2, 7);
+        parsedTimeString =
+          temp +
+          timeString[timeIndex - 1].substring(
+            timeString[timeIndex - 1].length - 5,
+            timeString[timeIndex - 1].length
+          );
       } else {
-        parsedTimeString = timeString[timeIndex - 1].substring(
-          0,
-          timeString[timeIndex - 1].length
-        );
+        if (term === "winter") {
+          parsedTimeString = timeString[timeIndex - 1].substring(
+            timeString[timeIndex - 1].length - 7,
+            timeString[timeIndex - 1].length
+          );
+        } else {
+          parsedTimeString = timeString[timeIndex - 1].substring(
+            0,
+            timeString[timeIndex - 1].length
+          );
+        }
       }
     }
     if (i == 2) {
       if (timeString[timeIndex + 1].includes("PM")) {
-        temp = parseInt(timeString[timeIndex + 1].substring(0, 2));
+        if (term === "winter") {
+          temp = parseInt(timeString[timeIndex + 1].substring(0, 3));
+        } else {
+          temp = parseInt(timeString[timeIndex + 1].substring(0, 2));
+        }
+
         if (temp != 12) {
           temp = temp + 12;
         }
         parsedTimeString = temp + timeString[timeIndex + 1].substring(2, 7);
       } else {
-        parsedTimeString = timeString[timeIndex + 1].substring(
-          0,
-          timeString[timeIndex - 1].length
-        );
+        if (term === "winter") {
+          parsedTimeString = timeString[timeIndex + 1].substring(0, 7);
+        } else {
+          parsedTimeString = timeString[timeIndex + 1].substring(
+            0,
+            timeString[timeIndex - 1].length
+          );
+        }
       }
     }
     return parsedTimeString;
@@ -386,6 +462,7 @@ const Schedule = () => {
       lecStart = selectedCourse.meeting.indexOf("LEC");
       labStart = selectedCourse.meeting.indexOf("LAB");
       semStart = selectedCourse.meeting.indexOf("SEM");
+
       examStart = selectedCourse.meeting.indexOf("EXAM");
       indexes = [lecStart, labStart, semStart, examStart];
 
@@ -448,62 +525,90 @@ const Schedule = () => {
 
   return (
     <Layout>
-      <Container>
+      <SelectionContainer>
+        <Dropdown>
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
+            {term === "fall" ? "Fall 2022" : "Winter 2023"}
+          </Dropdown.Toggle>
 
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setTerm("fall")}>Fall</Dropdown.Item>
+            <Dropdown.Item onClick={() => setTerm("winter")}>
+              Winter
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </SelectionContainer>
+      <Container>
         {/* Search Component */}
         <FilterContainer>
           <h2>Create Filters</h2>
 
-            <FormContainerOuter>
-              <FormContainer>
-                <Form id="dayToggles"> 
-                  <Form.Check type="switch" name="Monday" label="Monday"/>
-                  <Form.Check type="switch" name="Tuesday" label="Tuesday"/>
-                  <Form.Check type="switch" name="Wednesday" label="Wednesday"/>
-                  <Form.Check type="switch" name="Thursday" label="Thursday"/>
-                  <Form.Check type="switch" name="Friday" label="Friday"/>
-                </Form>
-              </FormContainer>
-              <FormContainer>
-                <Form id="yearToggles">
-                  <Form.Check type="switch" name="First Year" label="First Year"/>
-                  <Form.Check type="switch" name="Second Year" label="Second Year"/>
-                  <Form.Check type="switch" name="Third Year" label="Third Year"/>
-                  <Form.Check type="switch" name="Fourth Year" label="Fourth Year"/>
-                  <Form.Check type="switch" name="Graduate" label="Graduate"/>
-                </Form>
-              </FormContainer>
-            </FormContainerOuter>
+          <FormContainerOuter>
+            <FormContainer>
+              <Form id="dayToggles">
+                <Form.Check type="switch" name="Monday" label="Monday" />
+                <Form.Check type="switch" name="Tuesday" label="Tuesday" />
+                <Form.Check type="switch" name="Wednesday" label="Wednesday" />
+                <Form.Check type="switch" name="Thursday" label="Thursday" />
+                <Form.Check type="switch" name="Friday" label="Friday" />
+              </Form>
+            </FormContainer>
+            <FormContainer>
+              <Form id="yearToggles">
+                <Form.Check
+                  type="switch"
+                  name="First Year"
+                  label="First Year"
+                />
+                <Form.Check
+                  type="switch"
+                  name="Second Year"
+                  label="Second Year"
+                />
+                <Form.Check
+                  type="switch"
+                  name="Third Year"
+                  label="Third Year"
+                />
+                <Form.Check
+                  type="switch"
+                  name="Fourth Year"
+                  label="Fourth Year"
+                />
+                <Form.Check type="switch" name="Graduate" label="Graduate" />
+              </Form>
+            </FormContainer>
+          </FormContainerOuter>
 
-            <CreateTimeContainerOuter>
-              <CreateTimeContainer>
-                Start Time
-                <Form>
-                  <Input type="time" id="startTime"/>
-                </Form>
-              </CreateTimeContainer>
-              <CreateTimeContainer>
-                {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-start"}/> */}
-              </CreateTimeContainer>
+          <CreateTimeContainerOuter>
+            <CreateTimeContainer>
+              Start Time
+              <Form>
+                <Input type="time" id="startTime" />
+              </Form>
+            </CreateTimeContainer>
+            <CreateTimeContainer>
+              {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-start"}/> */}
+            </CreateTimeContainer>
 
-              <CreateTimeContainer>
-                End Time
-                <Form>
-                  <Input type="time" id="endTime"/>
-                </Form>
-              </CreateTimeContainer>
-              <CreateTimeContainer>
-                {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-end"}/> */}
-              </CreateTimeContainer>
-            </CreateTimeContainerOuter>
+            <CreateTimeContainer>
+              End Time
+              <Form>
+                <Input type="time" id="endTime" />
+              </Form>
+            </CreateTimeContainer>
+            <CreateTimeContainer>
+              {/* <Form.Check inline label="PM" name="group1" type="checkbox" id={"inline-checkbox-end"}/> */}
+            </CreateTimeContainer>
+          </CreateTimeContainerOuter>
 
           <ButtonContainer>
             <Button variant="primary" id="addFilterBtn" onClick={handleFilters}>
               Update Filter
             </Button>
           </ButtonContainer>
-       </FilterContainer>
-
+        </FilterContainer>
 
         {/* Active Filter Component */}
         <FilterContainer>
@@ -512,15 +617,13 @@ const Schedule = () => {
             <FormContainer>
               <List>
                 <b>Excluded Days</b>
-                <ul id="activeDayFilters">
-                </ul>
+                <ul id="activeDayFilters"></ul>
               </List>
             </FormContainer>
             <FormContainer>
               <List>
                 <b>Excluded Years</b>
-                <ul id="activeYearFilters">
-                </ul>
+                <ul id="activeYearFilters"></ul>
               </List>
             </FormContainer>
           </FormContainerOuter>
@@ -529,22 +632,19 @@ const Schedule = () => {
             <ActiveTimeContainer>
               <List>
                 <b>Start Time</b>
-                <div id="activeStartTimes">
-                </div>
+                <div id="activeStartTimes"></div>
               </List>
             </ActiveTimeContainer>
             <ActiveTimeContainer>
               <List>
-                <br/>
-                <div id="activeTimeDashes">
-                </div>
+                <br />
+                <div id="activeTimeDashes"></div>
               </List>
             </ActiveTimeContainer>
             <ActiveTimeContainer>
               <List>
                 <b>End Time</b>
-                <div id="activeEndTimes">
-                </div>
+                <div id="activeEndTimes"></div>
               </List>
             </ActiveTimeContainer>
           </ActiveTimeContainerOuter>
@@ -555,8 +655,6 @@ const Schedule = () => {
             </Button>
           </ButtonContainer>
         </FilterContainer>
-
-
 
         {/* Search Component */}
         <SubContainer>
