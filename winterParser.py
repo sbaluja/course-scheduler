@@ -36,13 +36,13 @@ if __name__ == '__main__':
             course_list.append({
                 'Term': lineList[i],
                 'Status': lineList[i+1],
-                'Name': lineList[i+2],
-                'Location': lineList[i+3],
-                'Meeting': lineList[i+4],
-                'Faculty': lineList[i+5],
-                'Capacity': lineList[i+6],
-                'Credits': lineList[i+7],
-                'Level': lineList[i+8]
+                'name': lineList[i+2],
+                'location': lineList[i+3],
+                'meeting': lineList[i+4],
+                'faculty': lineList[i+5],
+                'capacity': lineList[i+6],
+                'credits': lineList[i+7],
+                'level': lineList[i+8]
             })
 
     with open('winterCourses.json', 'w') as json_file:

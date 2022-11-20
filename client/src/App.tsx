@@ -17,7 +17,7 @@ const App = () => {
   const [error, setError] = useState<boolean>(false);
   const [filteredCourses, setFilteredCourses] = useState<CoursesType>([]);
   const [courseName, setCourseName] = useState("");
-  const [term, setTerm] = useState("fall");
+  const [term, setTerm] = useState("winter");
 
   // Pagination calculations
   const lastCourseIdx = currentPage * coursesPerPage;
@@ -133,7 +133,7 @@ const App = () => {
         setError(true);
       },
     });
-
+    console.log(courses.length);
     setCoursesLoading(false);
   };
 

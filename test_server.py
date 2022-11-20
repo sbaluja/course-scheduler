@@ -14,9 +14,14 @@ def test_root(client):
     resp = client.get('/')
     assert b'Hello World!' in resp.data
 
-def test_course_data(client):
-    """Function to test /courseData endpoint."""
-    resp = client.get('/courseData')
+def test_fall_course_data(client):
+    """Function to test /fallCourseData endpoint."""
+    resp = client.get('/fallCourseData')
+    assert len(resp.get_json()) == 3036
+
+def test_winter_courseData(client):
+    """Function to test /winterCourseData endpoint."""
+    resp = client.get('/winterCourseData')
     assert len(resp.get_json()) == 3036
 
 def test_course_search(client):
