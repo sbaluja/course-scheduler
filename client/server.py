@@ -24,9 +24,9 @@ def test_btn():
         return resp
 
 
-@app.route('/courseData')
-def course_data():
-    """This endpoint displays all the courses. \
+@app.route('/fallCourseData')
+def fall_course_data():
+    """This endpoint displays all the courses for the Fall term. \
         Each course is displayed in its own card, separately. Pagination supported."""
 
     with open("courses.json", "r", encoding='UTF-8') as file:
@@ -34,6 +34,18 @@ def course_data():
         resp.headers['Access-Control-Allow-Origin'] = '*'
         resp.status_code = 200
         return resp
+
+@app.route('/winterCourseData')
+def winter_course_data():
+    """This endpoint displays all the courses for the Winter term. \
+        Each course is displayed in its own card, separately. Pagination supported."""
+
+    with open("winterCourses.json", "r", encoding='UTF-8') as file:
+        resp = make_response(json.load(file))
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.status_code = 200
+        return resp
+
 
 # given keyword, returns factoid
 @app.route('/get-schedule', methods=['POST'])

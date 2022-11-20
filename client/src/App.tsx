@@ -17,6 +17,7 @@ const App = () => {
   const [error, setError] = useState<boolean>(false);
   const [filteredCourses, setFilteredCourses] = useState<CoursesType>([]);
   const [courseName, setCourseName] = useState("");
+  const [term, setTerm] = useState("fall");
 
   // Pagination calculations
   const lastCourseIdx = currentPage * coursesPerPage;
@@ -41,15 +42,16 @@ const App = () => {
   const filterCoursesByDay = (query: string) => {
     setFilteredCourses(
       courses.filter((course) => {
-        const TESTSTRING = "2022/09/08-2022/12/16 LEC Fri 08:30AM - 10:20AM, ROZH, Room 104 2022/09/08-2022/12/16 SEM Mon 04:30PM - 05:20PM, MCKN, Room 225 2022/12/06-2022/12/06 EXAM Tues 08:30AM - 10:30AM, Room TBA Room TBA";
+        const TESTSTRING =
+          "2022/09/08-2022/12/16 LEC Fri 08:30AM - 10:20AM, ROZH, Room 104 2022/09/08-2022/12/16 SEM Mon 04:30PM - 05:20PM, MCKN, Room 225 2022/12/06-2022/12/06 EXAM Tues 08:30AM - 10:30AM, Room TBA Room TBA";
         // const regexp = Exp("(?<=.)*(?<=LEC | LAB | EXAM | SEM ).+?(?=[0-9])");
         // const result = regexp.test(course.meeting);
         // const result = regexp.test(TESTSTRING);
         // if (result) {
-          //INCLUDE COURSE???
-        // }         
-        
-        // regex match string pattern for days 
+        //INCLUDE COURSE???
+        // }
+
+        // regex match string pattern for days
         //// ####/##/##-####/##/## AAA <***> ##...
         ////// ".+?(?=\d)"
         // .toLowerCase()
@@ -63,20 +65,24 @@ const App = () => {
   const filterCoursesByYear = (query: string[]) => {
     setFilteredCourses(
       courses.filter((course) => {
-
         const regexp = /.*?(\d+)/;
         const result = course.name.match(regexp);
 
         if (result) {
-          if (query.includes("First Year") && parseInt(result[1][0]) == 1) return true;
-          if (query.includes("Second Year") && parseInt(result[1][0]) == 2) return true;
-          if (query.includes("Third Year") && parseInt(result[1][0]) == 3) return true;
-          if (query.includes("Fourth Year") && parseInt(result[1][0]) == 4) return true;
-          if (query.includes("Graduate") && parseInt(result[1][0]) > 4) return true;
+          if (query.includes("First Year") && parseInt(result[1][0]) == 1)
+            return true;
+          if (query.includes("Second Year") && parseInt(result[1][0]) == 2)
+            return true;
+          if (query.includes("Third Year") && parseInt(result[1][0]) == 3)
+            return true;
+          if (query.includes("Fourth Year") && parseInt(result[1][0]) == 4)
+            return true;
+          if (query.includes("Graduate") && parseInt(result[1][0]) > 4)
+            return true;
         }
 
         // course.name
-        // regex match string pattern for code  
+        // regex match string pattern for code
         //// AAAA*<****>*...
 
         /////// ".*?(\d+)"
@@ -88,32 +94,35 @@ const App = () => {
     );
   };
 
-    // Filter courses by time
-    const filterCoursesByTime = (query: string) => {
-      setFilteredCourses(
-        courses.filter((course) => {
-          // course.meeting
-          // regex match string pattern for time
-          //// ####/##/##-####/##/## AAA AAA <####-####>...
-          ////// "(\d+:\d+[AP][M]){1}"
-          // .toLowerCase()
-          // .replace("*", "")
-          // .includes(query.toLowerCase().replace("*", ""))
-        })
-      );
-    };
-  
-    ////// TRIMMER: .Pattern = ".+?(?=LEC)"
-    ////// DAYS AFTER TRIMMER: ".+?(?=\d)"
-    ////// TIME AFTER TRIMMER: "(\d+:\d+[AP][M]){1}"
+  // Filter courses by time
+  const filterCoursesByTime = (query: string) => {
+    setFilteredCourses(
+      courses.filter((course) => {
+        // course.meeting
+        // regex match string pattern for time
+        //// ####/##/##-####/##/## AAA AAA <####-####>...
+        ////// "(\d+:\d+[AP][M]){1}"
+        // .toLowerCase()
+        // .replace("*", "")
+        // .includes(query.toLowerCase().replace("*", ""))
+      })
+    );
+  };
 
+  ////// TRIMMER: .Pattern = ".+?(?=LEC)"
+  ////// DAYS AFTER TRIMMER: ".+?(?=\d)"
+  ////// TIME AFTER TRIMMER: "(\d+:\d+[AP][M]){1}"
 
-  // Makes a request to fetch the list of UofG courses
-  const fetchCourses = () => {
+  // Makes a request to fetch the list of UofG courses given a term (fall or winter)
+  const fetchCourses = (term: string) => {
     setCoursesLoading(true);
 
+    const prodUrl = `https://131.104.49.100/${term}CourseData`;
+    const devUrl = `http://127.0.0.1:5000/${term}CourseData`;
+
     $.ajax({
-      url: "https://131.104.49.100/courseData",
+      // url: prodUrl, // prod
+      url: devUrl, // dev
       dataType: "json",
       type: "get",
       success: (data) => {
@@ -130,8 +139,8 @@ const App = () => {
 
   // Get courses on site load
   useEffect(() => {
-    fetchCourses();
-  }, []);
+    fetchCourses(term);
+  }, [term]);
 
   return (
     <Router>
