@@ -51,6 +51,39 @@ const Schedule = () => {
     setSelectedCourses([]);
     setEvents([]);
     setNumCourses(0);
+    resetFilters();
+
+    const dayToggles = document.getElementById("dayToggles");
+    if (dayToggles != null) {
+      const childElements = Object.values(
+        dayToggles.childNodes
+      ) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked) {
+          const node = childEl.children[0] as HTMLInputElement;
+          node.checked = false;
+        }
+      }
+    }
+
+    const yearToggles = document.getElementById("yearToggles");
+    if (yearToggles != null) {
+      const childElements = Object.values(
+        yearToggles.childNodes
+      ) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked) {
+          const node = childEl.children[0] as HTMLInputElement;
+          node.checked = false;
+        }
+      }
+    }
+
+    const startTime = document.getElementById("startTime") as HTMLInputElement;
+    startTime.value = "";
+
+    const endTime = document.getElementById("endTime") as HTMLInputElement;
+    endTime.value = "";
   }, [term]);
 
   // States
