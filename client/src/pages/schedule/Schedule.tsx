@@ -33,7 +33,6 @@ import { CourseType, CoursesType } from "../../utils/common_types";
 import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
 import { BsPlusCircle } from "react-icons/bs";
-import  ics from "ical"
 import { ModalDialog } from "react-bootstrap";
 
 
