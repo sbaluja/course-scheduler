@@ -122,8 +122,8 @@ const App = () => {
     const devUrl = `http://127.0.0.1:5000/${term}CourseData`;
 
     $.ajax({
-      url: prodUrl, // prod 
-      // url: devUrl, // dev
+      // url: prodUrl, // prod
+      url: devUrl, // dev
       dataType: "json",
       type: "get",
       success: (data) => {
