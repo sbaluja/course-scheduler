@@ -39,24 +39,30 @@ const App = () => {
   };
 
   // Filter courses by days
-  const filterCoursesByDay = (query: string) => {
+  const filterCoursesByDay = (query: string[]) => {
     setFilteredCourses(
       courses.filter((course) => {
-        const TESTSTRING =
-          "2022/09/08-2022/12/16 LEC Fri 08:30AM - 10:20AM, ROZH, Room 104 2022/09/08-2022/12/16 SEM Mon 04:30PM - 05:20PM, MCKN, Room 225 2022/12/06-2022/12/06 EXAM Tues 08:30AM - 10:30AM, Room TBA Room TBA";
-        // const regexp = Exp("(?<=.)*(?<=LEC | LAB | EXAM | SEM ).+?(?=[0-9])");
-        // const result = regexp.test(course.meeting);
-        // const result = regexp.test(TESTSTRING);
-        // if (result) {
-        //INCLUDE COURSE???
-        // }
+        const regexp = /(?<=LEC |LAB |SEM ).+?(?=[0-9])/g;
+        const result = course.meeting.match(regexp);
 
-        // regex match string pattern for days
-        //// ####/##/##-####/##/## AAA <***> ##...
-        ////// ".+?(?=\d)"
-        // .toLowerCase()
-        // .replace("*", "")
-        // .includes(query.toLowerCase().replace("*", ""))
+        if (result != null) {
+          for (let i = 0; i < result.length; i ++) {
+            if (result[i].includes("Mon") && !query.includes("Monday"))
+              return false;
+            if (result[i].includes("Tues") && !query.includes("Tuesday"))
+              return false;
+            if (result[i].includes("Wed") && !query.includes("Wednesday"))
+              return false;
+            if (result[i].includes("Thur") && !query.includes("Thursday"))
+              return false;
+            if (result[i].includes("Fri") && !query.includes("Friday"))
+              return false;
+          }
+          
+          return true;
+        }
+
+        return true;
       })
     );
   };
@@ -67,6 +73,9 @@ const App = () => {
       courses.filter((course) => {
         const regexp = /.*?(\d+)/;
         const result = course.name.match(regexp);
+
+        // console.log(query + " " + query.length)
+
 
         if (result) {
           if (query.includes("First Year") && parseInt(result[1][0]) == 1)
@@ -81,15 +90,7 @@ const App = () => {
             return true;
         }
 
-        // course.name
-        // regex match string pattern for code
-        //// AAAA*<****>*...
-
-        /////// ".*?(\d+)"
-
-        // .toLowerCase()
-        // .replace("*", "")
-        // .includes(query.toLowerCase().replace("*", ""))
+        return false;
       })
     );
   };

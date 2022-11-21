@@ -147,7 +147,31 @@ const Schedule = () => {
   const handleFilters = () => {
     addFilters();
 
-    // filterCoursesByDay();
+    // Add Days Excluded
+    // const excludedDays = [];
+    // const allDays = [
+    //   "Monday",
+    //   "Tuesday",
+    //   "Wednesday",
+    //   "Thursday",
+    //   "Friday",
+    // ];
+    // const dayToggles = document.getElementById("dayToggles");
+    // if (dayToggles != null) {
+    //   const childElements = Object.values(
+    //     dayToggles.childNodes
+    //   ) as HTMLElement[];
+    //   for (const childEl of childElements) {
+    //     if ((childEl.children[0] as HTMLInputElement).checked) {
+    //       const day = childEl.children[0].getAttribute("name");
+    //       if (day != null) {
+    //         excludedDays.push(day);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // filterCoursesByDay(excludedDays.length == 0 ? allDays : excludedDays);
 
     // Add Years Excluded
     const excludedYears = [];
@@ -182,6 +206,14 @@ const Schedule = () => {
     // Reset Days
     const dayList = document.getElementById("activeDayFilters");
     if (dayList != null) dayList.innerHTML = "";
+    const allDays = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+    ];
+    filterCoursesByDay(allDays);
 
     // Reset Years
     const yearList = document.getElementById("activeYearFilters");
