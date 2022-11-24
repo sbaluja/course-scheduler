@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { device } from "../../utils/device";
+import Card from "react-bootstrap/Card";
 
 export const Container = styled.div`
   display: flex;

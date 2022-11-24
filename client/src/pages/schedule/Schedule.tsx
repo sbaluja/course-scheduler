@@ -22,6 +22,7 @@ import {
   RemovableCourse,
   CalendarContainer,
   SelectionContainer,
+  Header,
 } from "./Schedule.styled";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
@@ -34,9 +35,9 @@ import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
 import { BsPlusCircle } from "react-icons/bs";
 import { ModalDialog } from "react-bootstrap";
+import { PageProps } from "../../types/common.types";
 
-
-const Schedule = () => {
+const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   // Course context
   const {
     filteredCourses,
@@ -205,13 +206,7 @@ const Schedule = () => {
     // Reset Days
     const dayList = document.getElementById("activeDayFilters");
     if (dayList != null) dayList.innerHTML = "";
-    const allDays = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-    ];
+    const allDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     filterCoursesByDay(allDays);
 
     // Reset Years
@@ -596,7 +591,7 @@ const Schedule = () => {
   };
 
   return (
-    <Layout>
+    <Layout themeType={themeType} toggleTheme={toggleTheme}>
       <SelectionContainer>
         <Dropdown>
           <Dropdown.Toggle variant="primary" id="dropdown-basic">
@@ -612,55 +607,91 @@ const Schedule = () => {
         </Dropdown>
         <ExportContainer>
           <Button variant="danger" id="exportBtn" onClick={exportCourses}>
-              Export
+            Export
           </Button>
-        </ExportContainer>  
+        </ExportContainer>
       </SelectionContainer>
       <Container>
         {/* Search Component */}
         <FilterContainer>
-          <h2>Create Filters</h2>
+          <Header>Create Filters</Header>
 
           <FormContainerOuter>
             <FormContainer>
               <Form id="dayToggles">
-                <Form.Check type="switch" name="Monday" label="Monday" />
-                <Form.Check type="switch" name="Tuesday" label="Tuesday" />
-                <Form.Check type="switch" name="Wednesday" label="Wednesday" />
-                <Form.Check type="switch" name="Thursday" label="Thursday" />
-                <Form.Check type="switch" name="Friday" label="Friday" />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Monday"
+                  label="Monday"
+                />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Tuesday"
+                  label="Tuesday"
+                />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Wednesday"
+                  label="Wednesday"
+                />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Thursday"
+                  label="Thursday"
+                />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Friday"
+                  label="Friday"
+                />
               </Form>
             </FormContainer>
             <FormContainer>
               <Form id="yearToggles">
                 <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
                   type="switch"
                   name="First Year"
                   label="First Year"
                 />
                 <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
                   type="switch"
                   name="Second Year"
                   label="Second Year"
                 />
                 <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
                   type="switch"
                   name="Third Year"
                   label="Third Year"
                 />
                 <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
                   type="switch"
                   name="Fourth Year"
                   label="Fourth Year"
                 />
-                <Form.Check type="switch" name="Graduate" label="Graduate" />
+                <Form.Check
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  type="switch"
+                  name="Graduate"
+                  label="Graduate"
+                />
               </Form>
             </FormContainer>
           </FormContainerOuter>
 
           <CreateTimeContainerOuter>
             <CreateTimeContainer>
-              Start Time
+              <span className={themeType == "light" ? "dark" : "text-white"}>
+                Start Time
+              </span>
               <Form>
                 <Input type="time" id="startTime" />
               </Form>
@@ -670,7 +701,9 @@ const Schedule = () => {
             </CreateTimeContainer>
 
             <CreateTimeContainer>
-              End Time
+              <span className={themeType == "light" ? "dark" : "text-white"}>
+                End Time
+              </span>
               <Form>
                 <Input type="time" id="endTime" />
               </Form>
@@ -689,18 +722,28 @@ const Schedule = () => {
 
         {/* Active Filter Component */}
         <FilterContainer>
-          <h2>Active Filters</h2>
+          <Header>Active Filters</Header>
           <FormContainerOuter>
             <FormContainer>
               <List>
-                <b>Included Days</b>
-                <ul id="activeDayFilters"></ul>
+                <span className={themeType == "light" ? "dark" : "text-white"}>
+                  <b>Included Days</b>
+                </span>
+                <ul
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  id="activeDayFilters"
+                ></ul>
               </List>
             </FormContainer>
             <FormContainer>
               <List>
-                <b>Included Years</b>
-                <ul id="activeYearFilters"></ul>
+                <span className={themeType == "light" ? "dark" : "text-white"}>
+                  <b>Included Years</b>
+                </span>
+                <ul
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  id="activeYearFilters"
+                ></ul>
               </List>
             </FormContainer>
           </FormContainerOuter>
@@ -708,20 +751,33 @@ const Schedule = () => {
           <ActiveTimeContainerOuter>
             <ActiveTimeContainer>
               <List>
-                <b>Start Time</b>
-                <div id="activeStartTimes"></div>
+                <span className={themeType == "light" ? "dark" : "text-white"}>
+                  <b>Start Time</b>
+                </span>
+                <div
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  id="activeStartTimes"
+                ></div>
               </List>
             </ActiveTimeContainer>
             <ActiveTimeContainer>
               <List>
                 <br />
-                <div id="activeTimeDashes"></div>
+                <div
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  id="activeTimeDashes"
+                ></div>
               </List>
             </ActiveTimeContainer>
             <ActiveTimeContainer>
               <List>
-                <b>End Time</b>
-                <div id="activeEndTimes"></div>
+                <span className={themeType == "light" ? "dark" : "text-white"}>
+                  <b>End Time</b>
+                </span>
+                <div
+                  className={themeType == "light" ? "dark" : "text-white"}
+                  id="activeEndTimes"
+                ></div>
               </List>
             </ActiveTimeContainer>
           </ActiveTimeContainerOuter>
@@ -736,7 +792,7 @@ const Schedule = () => {
         {/* Search Component */}
         <SubContainer>
           <SearchContainer>
-            <h2>Search Courses</h2>
+            <Header>Search Courses</Header>
             <Input
               type="text"
               id="course"
@@ -766,7 +822,7 @@ const Schedule = () => {
         {/* Selected Courses Component */}
         <SubContainer>
           <SelectedCoursesContainer>
-            <h2>Selected Courses</h2>
+            <Header>Selected Courses</Header>
             {/* Displays list of selected courses into a container */}
             <List>
               {selectedCourses.map((course, i) => (
@@ -781,7 +837,9 @@ const Schedule = () => {
           </SelectedCoursesContainer>
         </SubContainer>
       </Container>
-      <CalendarContainer>
+      <CalendarContainer
+        className={themeType == "light" ? "dark" : "text-white"}
+      >
         <FullCalendar
           plugins={[timeGridPlugin]}
           weekends={false}

@@ -7,13 +7,14 @@ import { CoursesContext } from "../../contexts/course-context";
 import { Pagination } from "../../components/pagination";
 import { SelectionContainer } from "./Courses.styled";
 import Dropdown from "react-bootstrap/Dropdown";
+import { PageProps } from "../../types/common.types";
 
-const Courses = () => {
+const Courses: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   const { currentCourses, coursesLoading, error, term, setTerm } =
     useContext(CoursesContext);
 
   return (
-    <Layout>
+    <Layout themeType={themeType} toggleTheme={toggleTheme}>
       <SelectionContainer>
         <Dropdown>
           <Dropdown.Toggle variant="primary" id="dropdown-basic">
@@ -36,7 +37,7 @@ const Courses = () => {
         ) : (
           <Grid>
             {currentCourses.map((course, i) => {
-              return <Course key={i} course={course} />;
+              return <Course themeType={themeType} key={i} course={course} />;
             })}
           </Grid>
         )}

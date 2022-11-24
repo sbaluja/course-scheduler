@@ -3,6 +3,7 @@ import {
   Container,
   FooterDivider,
   RightsContainer,
+  FooterText,
 } from "./Footer.styled";
 
 const Footer: React.FC = () => {
@@ -10,7 +11,9 @@ const Footer: React.FC = () => {
     <Container>
       <FooterDivider />
       <RightsContainer>
-        <p>© 2022 CourseClub - Team306. All Rights Reserved</p>
+        <FooterText>
+          © 2022 CourseClub - Team306. All Rights Reserved
+        </FooterText>
       </RightsContainer>
     </Container>
   );

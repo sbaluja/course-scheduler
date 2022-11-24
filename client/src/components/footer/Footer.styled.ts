@@ -12,8 +12,13 @@ export const Container = styled.div`
 
 export const FooterDivider = styled.hr`
   width: 90%;
-  border: 1px solid rgba(56, 56, 56, 0.5);
+  border: ${({theme}) => `1px solid ${theme.primary}`} 
+  /* 1px solid rgba(56, 56, 56, 0.5); */
 `;
+
+export const FooterText = styled.p`
+  color: ${({theme}) => theme.primary};
+`
 
 export const RightsContainer = styled.div`
   display: flex;

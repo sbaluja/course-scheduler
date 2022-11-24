@@ -9,6 +9,10 @@ export const Container = styled.div`
   padding-block: 2rem;
 `;
 
+export const Header = styled.h2`
+  color: ${({ theme }) => theme.primary};
+`;
+
 export const SubContainer = styled.div`
   border: 1px solid #0d6efd;
   border-radius: 2px;
@@ -145,6 +149,8 @@ export const RemoveContainer = styled.div`
 `;
 
 export const RemovableCourse = styled.span`
+  color: ${({ theme }) => theme.primary};
+
   :hover {
     cursor: pointer;
     color: #dc3545;
@@ -157,6 +163,8 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
+  color: ${({ theme }) => theme.primary};
+
   padding-block: 3px;
   :hover {
     cursor: pointer;

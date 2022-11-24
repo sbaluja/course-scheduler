@@ -34,21 +34,17 @@ export const List = styled.ul`
 `;
 
 export const LogoContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-export const Logo = styled.img`
-  display: flex;
-  justify-self: center;
-  align-self: center;
-  width: 21rem;
-  height: 3.5rem;
+export const Header = styled.h1`
+  font-size: 4rem;
+  text-decoration: none;
 
   @media ${device.laptop} {
-    width: 12rem;
-    height: 2rem;
+    font-size: 3rem;
   }
 `;
 
@@ -102,19 +98,19 @@ export const LinkWrapper = styled.li`
   }
 `;
 
-export const Link = styled(NavLink) <{ isActive: boolean }>`
+export const Link = styled(NavLink)<{ isActive: boolean }>`
   text-decoration: none;
   text-transform: uppercase;
   margin: 1.5rem;
   font-size: 0.85rem;
   transition: color 0.3s ease-in-out;
-  color: ${({ isActive }) => isActive && "#000000"};
+  color: ${({ theme, isActive }) => isActive && theme.primary};
   border-bottom: ${({ isActive }) => isActive && "1px solid"};
   padding-bottom: 6px;
   font-weight: 500;
 
   :hover {
-    color: #000000;
+    color: ${({ theme }) => theme.primary};
   }
 
   @media ${device.desktopS} {

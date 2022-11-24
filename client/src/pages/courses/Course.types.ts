@@ -6,4 +6,5 @@ export type CoursesProps = {
 
 export type CourseProps = {
     course: CourseType;
+    themeType: string;
 }

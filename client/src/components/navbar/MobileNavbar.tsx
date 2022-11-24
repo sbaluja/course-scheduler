@@ -4,16 +4,15 @@ import { Cross as Hamburger } from "hamburger-react";
 import {
   HamburgerContainer,
   LogoContainer,
-  Logo,
   NavbarContainer,
   MobileMenu,
+  Header,
   LinkWrapper,
   Link,
-  List
+  List,
 } from "./Navbar.styled";
 import { pages, activeCheck } from "./NavbarConstants";
 import { NavLink } from "react-router-dom";
-import CourseClub from "../../assets/CourseClub.png";
 
 const MobileNavbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,7 +29,7 @@ const MobileNavbar: React.FC = () => {
         </HamburgerContainer>
         <LogoContainer>
           <NavLink to="/">
-            <Logo src={CourseClub} />
+            <Header>CourseClub</Header>
           </NavLink>
         </LogoContainer>
       </NavbarContainer>
@@ -38,7 +37,10 @@ const MobileNavbar: React.FC = () => {
         <List>
           {pages.map((page, id) => (
             <LinkWrapper key={id}>
-              <Link isActive={activeCheck(window.location.pathname, page.link)} to={page.link}>
+              <Link
+                isActive={activeCheck(window.location.pathname, page.link)}
+                to={page.link}
+              >
                 {page.name}
               </Link>
             </LinkWrapper>

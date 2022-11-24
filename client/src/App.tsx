@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CoursesType } from "./utils/common_types";
 import { CoursesContext } from "./contexts/course-context";
+import { ThemeProvider } from "styled-components";
+import { light, dark } from "./components/theme/Themes";
+import GlobalStyle from "./components/theme/globalStyles";
 
 // Pages
 import { Home } from "./pages/home";
@@ -26,6 +29,17 @@ const App = () => {
   const totalCourses = courses.length;
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  // Themeing
+  const localTheme = localStorage.getItem("theme") ?? "dark";
+
+  const [theme, setTheme] = useState<string>(localTheme);
+
+  const toggleTheme = (): void => {
+    const toggledTheme = theme === "light" ? "dark" : "light";
+    localStorage.setItem("theme", toggledTheme);
+    setTheme(toggledTheme);
+  };
+
   // Filter searched courses
   const filterCourses = (query: string) => {
     setFilteredCourses(
@@ -46,7 +60,7 @@ const App = () => {
         const result = course.meeting.match(regexp);
 
         if (result != null) {
-          for (let i = 0; i < result.length; i ++) {
+          for (let i = 0; i < result.length; i++) {
             if (result[i].includes("Mon") && !query.includes("Monday"))
               return false;
             if (result[i].includes("Tues") && !query.includes("Tuesday"))
@@ -58,7 +72,7 @@ const App = () => {
             if (result[i].includes("Fri") && !query.includes("Friday"))
               return false;
           }
-          
+
           return true;
         }
 
@@ -75,7 +89,6 @@ const App = () => {
         const result = course.name.match(regexp);
 
         // console.log(query + " " + query.length)
-
 
         if (result) {
           if (query.includes("First Year") && parseInt(result[1][0]) == 1)
@@ -144,35 +157,47 @@ const App = () => {
 
   return (
     <Router>
-      <CoursesContext.Provider
-        value={{
-          currentCourses,
-          coursesPerPage,
-          totalCourses,
-          currentPage,
-          paginate,
-          setCourses,
-          coursesLoading,
-          setCoursesLoading,
-          error,
-          setError,
-          filteredCourses,
-          filterCourses,
-          filterCoursesByDay,
-          filterCoursesByYear,
-          filterCoursesByTime,
-          courseName,
-          setCourseName,
-          term,
-          setTerm,
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/schedule" element={<Schedule />} />
-        </Routes>
-      </CoursesContext.Provider>
+      <ThemeProvider theme={theme === "light" ? light : dark}>
+        <GlobalStyle />
+        <CoursesContext.Provider
+          value={{
+            currentCourses,
+            coursesPerPage,
+            totalCourses,
+            currentPage,
+            paginate,
+            setCourses,
+            coursesLoading,
+            setCoursesLoading,
+            error,
+            setError,
+            filteredCourses,
+            filterCourses,
+            filterCoursesByDay,
+            filterCoursesByYear,
+            filterCoursesByTime,
+            courseName,
+            setCourseName,
+            term,
+            setTerm,
+          }}
+        >
+          <Routes>
+            <Route
+              path="/"
+              element={<Home themeType={theme} toggleTheme={toggleTheme} />}
+            />
+            <Route
+              path="/courses"
+              element={<Courses themeType={theme} toggleTheme={toggleTheme} />}
+            />
+            <Route
+              path="/schedule"
+              element={<Schedule themeType={theme} toggleTheme={toggleTheme} />}
+            />
+          </Routes>
+        </CoursesContext.Provider>
+      </ThemeProvider>
     </Router>
   );
 };
