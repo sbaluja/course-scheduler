@@ -121,3 +121,17 @@ export const Link = styled(NavLink)<{ isActive: boolean }>`
     font-size: 1rem;
   }
 `;
+
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 2rem;
+  width: 8rem;
+  padding-block: 2rem;
+  border: 1px solid #0d6efd;
+  border-radius: 2px;
+`;
