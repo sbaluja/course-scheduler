@@ -27,19 +27,29 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
   
   const [value,setValue]=useState('');
   const handleSelect=(event: string | null)=>{
-    // console.log('anything');
-    // console.log(event);
-    // console.log(event.target.va);
     if (event){
+      
       setValue(event);
+      const musicElement = document.getElementById("music") as HTMLAudioElement | null
+      if(musicElement){
+        console.log("Loading music")
+        musicElement.pause()
+        musicElement.setAttribute('src', "music/" + event);
+        musicElement.load();
+        musicElement.play();
+        musicElement.volume = 0.2;
+      } else {
+        console.log("Music element not found");
+      }
     }
-
     
   }
  
   return (
     <Container>
-      <Play value={value}/>
+      <audio id="music" loop>
+        <source src="empty.mp3" type="audio/mpeg"/>
+      </audio>
       {width > 1024 ? (
         <NavbarContainer>
           <LinkContainer>
@@ -64,9 +74,7 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
           <LinkContainer>
             <Dropdown onSelect={handleSelect} id="dropdown-music-main">
               <Dropdown.Toggle variant="primary" id="dropdown-music">
-                {/* {term === "fall" ? "Fall 2022" : "Winter 2023"} */}
                 <Label value={value}/>
-                {/* Whatever they picked <MusicOnIcon></MusicOnIcon> */}
               </Dropdown.Toggle>
 
                     <Dropdown.Menu>
@@ -74,6 +82,7 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
                       <Dropdown.Item eventKey="Ellinia.mp3">Ellinia</Dropdown.Item>
                       <Dropdown.Item eventKey="Henesys.mp3">Henesys</Dropdown.Item>
                       <Dropdown.Item eventKey="Kerning.mp3">Kerning</Dropdown.Item>
+                      <Dropdown.Item eventKey="Dior.mp3">Dior - Pop Smoke</Dropdown.Item>
                     </Dropdown.Menu>
               </Dropdown>
             <List>
@@ -107,10 +116,11 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
 
 function Play({value} : any) {
   
-  if (value.toString() != 'OFF') {
-    return <audio autoPlay controls><source src={value} type="audio/mp3"/></audio>;
-  }else {
-    return <audio></audio>;
+  if (value.toString() == "OFF" || value.toString() == "") {
+    return <audio id="music"></audio>;
+  } else {
+    // console.log(value.toString())
+    return <audio id="music" controls autoPlay><source src={value} type="audio/mpeg"/></audio>
   }
 }
 
