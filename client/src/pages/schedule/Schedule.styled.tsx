@@ -179,3 +179,8 @@ export const SelectionContainer = styled.div`
   padding-block: 2rem 1rem;
   padding-right: 20px;
 `;
+
+export const ClearContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
