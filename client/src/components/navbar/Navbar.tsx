@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Container,
   NavbarContainer,
@@ -8,7 +8,7 @@ import {
   LinkWrapper,
   Link,
   List,
-  ButtonContainer
+  ButtonContainer,
 } from "./Navbar.styled";
 import Dropdown from "react-bootstrap/Dropdown";
 import { NavLink } from "react-router-dom";
@@ -19,22 +19,23 @@ import { NavProps } from "./Navbar.types";
 import IconButton from "@mui/material/IconButton";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import MusicOnIcon from '@mui/icons-material/MusicNote';
-import MusicOffIcon from '@mui/icons-material/MusicOff';
+import MusicOnIcon from "@mui/icons-material/MusicNote";
+import MusicOffIcon from "@mui/icons-material/MusicOff";
 
 const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
   const { width } = useWindowDimensions();
-  
-  const [value,setValue]=useState('');
-  const handleSelect=(event: string | null)=>{
-    if (event){
-      
+
+  const [value, setValue] = useState("");
+  const handleSelect = (event: string | null) => {
+    if (event) {
       setValue(event);
-      const musicElement = document.getElementById("music") as HTMLAudioElement | null
-      if(musicElement){
-        console.log("Loading music")
-        musicElement.pause()
-        musicElement.setAttribute('src', "music/" + event);
+      const musicElement = document.getElementById(
+        "music"
+      ) as HTMLAudioElement | null;
+      if (musicElement) {
+        console.log("Loading music");
+        musicElement.pause();
+        musicElement.setAttribute("src", "music/" + event);
         musicElement.load();
         musicElement.play();
         musicElement.volume = 0.2;
@@ -42,13 +43,12 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
         console.log("Music element not found");
       }
     }
-    
-  }
- 
+  };
+
   return (
     <Container>
       <audio id="music" loop>
-        <source src="empty.mp3" type="audio/mpeg"/>
+        <source src="empty.mp3" type="audio/mpeg" />
       </audio>
       {width > 1024 ? (
         <NavbarContainer>
@@ -74,17 +74,19 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
           <LinkContainer>
             <Dropdown onSelect={handleSelect} id="dropdown-music-main">
               <Dropdown.Toggle variant="primary" id="dropdown-music">
-                <Label value={value}/>
+                <Label value={value} />
               </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                      <Dropdown.Item eventKey="OFF">OFF</Dropdown.Item>
-                      <Dropdown.Item eventKey="Ellinia.mp3">Ellinia</Dropdown.Item>
-                      <Dropdown.Item eventKey="Henesys.mp3">Henesys</Dropdown.Item>
-                      <Dropdown.Item eventKey="Kerning.mp3">Kerning</Dropdown.Item>
-                      <Dropdown.Item eventKey="Dior.mp3">Dior - Pop Smoke</Dropdown.Item>
-                    </Dropdown.Menu>
-              </Dropdown>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="OFF">OFF</Dropdown.Item>
+                <Dropdown.Item eventKey="Ellinia.mp3">Ellinia</Dropdown.Item>
+                <Dropdown.Item eventKey="Henesys.mp3">Henesys</Dropdown.Item>
+                <Dropdown.Item eventKey="Kerning.mp3">Kerning</Dropdown.Item>
+                <Dropdown.Item eventKey="Dior.mp3">
+                  Dior - Pop Smoke
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <List>
               {pages.slice(3, 6).map((page, id) => (
                 <LinkWrapper key={id}>
@@ -107,28 +109,29 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
           </LinkContainer>
         </NavbarContainer>
       ) : (
-        <MobileNavbar />
+        <MobileNavbar themeType={themeType} />
       )}
     </Container>
   );
 };
 
-
-function Play({value} : any) {
-  
+function Play({ value }: any) {
   if (value.toString() == "OFF" || value.toString() == "") {
     return <audio id="music"></audio>;
   } else {
     // console.log(value.toString())
-    return <audio id="music" controls autoPlay><source src={value} type="audio/mpeg"/></audio>
+    return (
+      <audio id="music" controls autoPlay>
+        <source src={value} type="audio/mpeg" />
+      </audio>
+    );
   }
 }
 
-function Label({value} : any) {
-  
-  if (value.toString() == 'OFF' || value == "") {
+function Label({ value }: any) {
+  if (value.toString() == "OFF" || value == "") {
     return <MusicOffIcon></MusicOffIcon>;
-  }else {
+  } else {
     return <MusicOnIcon></MusicOnIcon>;
   }
 }

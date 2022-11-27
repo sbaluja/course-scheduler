@@ -24,6 +24,7 @@ import {
   CalendarContainer,
   SelectionContainer,
   Header,
+  ClearContainer,
 } from "./Schedule.styled";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import timeGridPlugin from "@fullcalendar/timegrid"; // a plugin!
@@ -52,45 +53,6 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     setTerm,
   } = useContext(CoursesContext);
 
-  useEffect(() => {
-    setSelectedCourses([]);
-    setEvents([]);
-    setNumCourses(0);
-    resetFilters();
-
-    const dayToggles = document.getElementById("dayToggles");
-    if (dayToggles != null) {
-      const childElements = Object.values(
-        dayToggles.childNodes
-      ) as HTMLElement[];
-      for (const childEl of childElements) {
-        if ((childEl.children[0] as HTMLInputElement).checked) {
-          const node = childEl.children[0] as HTMLInputElement;
-          node.checked = false;
-        }
-      }
-    }
-
-    const yearToggles = document.getElementById("yearToggles");
-    if (yearToggles != null) {
-      const childElements = Object.values(
-        yearToggles.childNodes
-      ) as HTMLElement[];
-      for (const childEl of childElements) {
-        if ((childEl.children[0] as HTMLInputElement).checked) {
-          const node = childEl.children[0] as HTMLInputElement;
-          node.checked = false;
-        }
-      }
-    }
-
-    const startTime = document.getElementById("startTime") as HTMLInputElement;
-    startTime.value = "";
-
-    const endTime = document.getElementById("endTime") as HTMLInputElement;
-    endTime.value = "";
-  }, [term]);
-
   // States
   const [show, setShow] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<CourseType>({
@@ -104,24 +66,30 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     credits: "",
     level: "",
   });
-  const [selectedCourses, setSelectedCourses] = useState<CoursesType>([]);
+  const [fallSelectedCourses, setFallSelectedCourses] = useState<CoursesType>(
+    []
+  );
+  const [winterSelectedCourses, setWinterSelectedCourses] =
+    useState<CoursesType>([]);
   const [events, setEvents] = useState<EventType[]>([]);
   const [numCourses, setNumCourses] = useState<number>(0);
   const [showRemove, setShowRemove] = useState(false);
+  const [showScheduleConfirmation, setShowScheduleConfirmation] =
+    useState(false);
   const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
 
   // Variable declarations
   const colors = [
     "red",
     "blue",
-    "orange",
     "green",
     "purple",
-    "brown",
-    "darkslategrey",
+    "darkorange",
+    "#8887E6",
+    "#387780",
+    "#967D69",
+    "#650D1B",
     "olivedrab",
-    "black",
-    "darksalmon",
   ];
   let lecStart = 0;
   let labStart = 0;
@@ -211,7 +179,6 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     //   includedTimes.push(end_ul.firstElementChild?.innerHTML);
     //   filterCoursesByTime(includedTimes);
     // }
-
   };
 
   // Reset active filters list
@@ -372,6 +339,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   const handleCloseModal = () => {
     setShow(false);
     setShowRemove(false);
+    setShowScheduleConfirmation(false);
   };
 
   // Shows confirmation modal to remove a course from schedule
@@ -522,59 +490,93 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
 
   // Handles adding a course to the schedule
   const handleAddCourse = (newCourse: CourseType) => {
-    if (selectedCourses.length < 5 && selectedCourses != undefined) {
-      // Handles duplicates
-      selectedCourses.forEach((course) => {
-        if (course.name == newCourse.name) {
-          duplicateFlag = 1;
-          alert("Error: Course has already been added");
-        }
-      });
-      if (duplicateFlag == 1) {
-        duplicateFlag = 0;
-        setShow(false);
-        return;
-      }
-
-      // Add lecture events
-      lecStart = selectedCourse.meeting.indexOf("LEC");
-      labStart = selectedCourse.meeting.indexOf("LAB");
-      semStart = selectedCourse.meeting.indexOf("SEM");
-
-      examStart = selectedCourse.meeting.indexOf("EXAM");
-      indexes = [lecStart, labStart, semStart, examStart];
-
-      lecText = validEvent(selectedCourse.meeting, lecStart, indexes);
-      labText = validEvent(selectedCourse.meeting, labStart, indexes);
-      semText = validEvent(selectedCourse.meeting, semStart, indexes);
-
+    if (term === "winter") {
       if (
-        lecText.includes("TBA") ||
-        labText.includes("TBA") ||
-        semText.includes("TBA")
+        winterSelectedCourses.length < 5 &&
+        winterSelectedCourses != undefined
       ) {
-        setSelectedCourses([...selectedCourses, newCourse]);
+        // Handles duplicates
+        winterSelectedCourses.forEach((course) => {
+          if (course.name == newCourse.name) {
+            duplicateFlag = 1;
+            alert("Error: Course has already been added");
+          }
+        });
+        if (duplicateFlag == 1) {
+          duplicateFlag = 0;
+          setShow(false);
+          return;
+        }
+      } else {
+        alert("Error: Number of Winter courses exceeded");
         setShow(false);
         return;
-      } else {
-        setSelectedCourses([...selectedCourses, newCourse]);
-
-        if (lecText != "") {
-          // Add lecture event
-          addEvent("Lecture", lecStart, lecText);
-        }
-        if (labText != "") {
-          // Add lab event
-          addEvent("Lab", labStart, labText);
-        }
-        if (semText != "") {
-          // Add sem event
-          addEvent("Seminar", semStart, semText);
-        }
-        setNumCourses(numCourses + 1);
       }
     } else {
-      alert("Error: Number of courses exceeded");
+      if (fallSelectedCourses.length < 5 && fallSelectedCourses != undefined) {
+        // Handles duplicates
+        fallSelectedCourses.forEach((course) => {
+          if (course.name == newCourse.name) {
+            duplicateFlag = 1;
+            alert("Error: Course has already been added");
+          }
+        });
+        if (duplicateFlag == 1) {
+          duplicateFlag = 0;
+          setShow(false);
+          return;
+        }
+      } else {
+        alert("Error: Number of Fall courses exceeded");
+        setShow(false);
+        return;
+      }
+    }
+
+    // Add lecture events
+    lecStart = selectedCourse.meeting.indexOf("LEC");
+    labStart = selectedCourse.meeting.indexOf("LAB");
+    semStart = selectedCourse.meeting.indexOf("SEM");
+
+    examStart = selectedCourse.meeting.indexOf("EXAM");
+    indexes = [lecStart, labStart, semStart, examStart];
+
+    lecText = validEvent(selectedCourse.meeting, lecStart, indexes);
+    labText = validEvent(selectedCourse.meeting, labStart, indexes);
+    semText = validEvent(selectedCourse.meeting, semStart, indexes);
+
+    if (
+      lecText.includes("TBA") ||
+      labText.includes("TBA") ||
+      semText.includes("TBA")
+    ) {
+      if (term === "winter") {
+        setWinterSelectedCourses([...winterSelectedCourses, newCourse]);
+      } else {
+        setFallSelectedCourses([...fallSelectedCourses, newCourse]);
+      }
+      setShow(false);
+      return;
+    } else {
+      if (term === "winter") {
+        setWinterSelectedCourses([...winterSelectedCourses, newCourse]);
+      } else {
+        setFallSelectedCourses([...fallSelectedCourses, newCourse]);
+      }
+
+      if (lecText != "") {
+        // Add lecture event
+        addEvent(" Lecture", lecStart, lecText);
+      }
+      if (labText != "") {
+        // Add lab event
+        addEvent(" Lab", labStart, labText);
+      }
+      if (semText != "") {
+        // Add sem event
+        addEvent(" Seminar", semStart, semText);
+      }
+      setNumCourses(numCourses + 1);
     }
     setShow(false);
   };
@@ -582,13 +584,22 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   // Removes courses from selected courses list and schedule
   const handleRemoveCourse = (courseName: string) => {
     let updatedCourses: CoursesType = [];
-    if (selectedCourses != undefined) {
-      updatedCourses = selectedCourses.filter((course) => {
-        return course.name != courseName;
-      });
-    }
 
-    setSelectedCourses(updatedCourses);
+    if (term === "fall") {
+      if (fallSelectedCourses != undefined) {
+        updatedCourses = fallSelectedCourses.filter((course) => {
+          return course.name != courseName;
+        });
+        setFallSelectedCourses(updatedCourses);
+      }
+    } else {
+      if (winterSelectedCourses != undefined) {
+        updatedCourses = winterSelectedCourses.filter((course) => {
+          return course.name != courseName;
+        });
+        setWinterSelectedCourses(updatedCourses);
+      }
+    }
 
     let updatedEvents: EventType[] = [];
     if (events != undefined) {
@@ -603,6 +614,14 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
 
   const exportCourses = () => {
     window.print();
+  };
+
+  const clearSchedule = () => {
+    setFallSelectedCourses([]);
+    setWinterSelectedCourses([]);
+    setNumCourses(0);
+    setEvents([]);
+    setShowScheduleConfirmation(false);
   };
 
   return (
@@ -839,18 +858,43 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
             <Header>Selected Courses</Header>
             {/* Displays list of selected courses into a container */}
             <List>
-              {selectedCourses.map((course, i) => (
-                <li key={i} onClick={() => handleShowRemoveModal(course.name)}>
-                  <RemovableCourse>
-                    <FiTrash2 />
-                    <span>&nbsp;&nbsp;{course.name}</span>
-                  </RemovableCourse>
-                </li>
-              ))}
+              {term === "fall"
+                ? fallSelectedCourses.map((course, i) => (
+                    <li
+                      key={i}
+                      onClick={() => handleShowRemoveModal(course.name)}
+                    >
+                      <RemovableCourse>
+                        <FiTrash2 />
+                        <span>&nbsp;&nbsp;{course.name}</span>
+                      </RemovableCourse>
+                    </li>
+                  ))
+                : winterSelectedCourses.map((course, i) => (
+                    <li
+                      key={i}
+                      onClick={() => handleShowRemoveModal(course.name)}
+                    >
+                      <RemovableCourse>
+                        <FiTrash2 />
+                        <span>&nbsp;&nbsp;{course.name}</span>
+                      </RemovableCourse>
+                    </li>
+                  ))}
             </List>
           </SelectedCoursesContainer>
         </SubContainer>
       </Container>
+      <ClearContainer>
+        <Button
+          variant="danger"
+          onClick={() => {
+            setShowScheduleConfirmation(true);
+          }}
+        >
+          Clear Schedule
+        </Button>
+      </ClearContainer>
       <CalendarContainer
         className={themeType == "light" ? "dark" : "text-white"}
       >
@@ -917,6 +961,21 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
             onClick={() => handleRemoveCourse(selectedRemoveCourse)}
           >
             Remove Course
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showScheduleConfirmation} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Clear Schedule</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to clear your schedule?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={clearSchedule}>
+            Clear
           </Button>
         </Modal.Footer>
       </Modal>

@@ -220,3 +220,8 @@ export const SelectionContainer = styled.div`
     display: none;
   }
 `;
+
+export const ClearContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;

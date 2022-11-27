@@ -3,6 +3,10 @@ export type NavProps = {
   toggleTheme: () => void;
 };
 
+export type MobileNavProps = {
+  themeType: string;
+}
+
 export type LinkType = {
   name: string;
   link: string;
