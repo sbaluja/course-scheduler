@@ -13,8 +13,9 @@ import {
 } from "./Navbar.styled";
 import { pages, activeCheck } from "./NavbarConstants";
 import { NavLink } from "react-router-dom";
+import { MobileNavProps } from "./Navbar.types";
 
-const MobileNavbar: React.FC = () => {
+const MobileNavbar: React.FC<MobileNavProps> = ({ themeType }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onToggle = () => {
@@ -25,7 +26,12 @@ const MobileNavbar: React.FC = () => {
     <>
       <NavbarContainer>
         <HamburgerContainer>
-          <Hamburger size={24} toggled={isOpen} toggle={onToggle} />
+          <Hamburger
+            color={themeType === "light" ? "black" : "white"}
+            size={24}
+            toggled={isOpen}
+            toggle={onToggle}
+          />
         </HamburgerContainer>
         <LogoContainer>
           <NavLink to="/">
