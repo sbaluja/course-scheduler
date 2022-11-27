@@ -73,6 +73,8 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [numCourses, setNumCourses] = useState<number>(0);
   const [showRemove, setShowRemove] = useState(false);
+  const [showScheduleConfirmation, setShowScheduleConfirmation] =
+    useState(false);
   const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
 
   // Variable declarations
@@ -336,6 +338,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   const handleCloseModal = () => {
     setShow(false);
     setShowRemove(false);
+    setShowScheduleConfirmation(false);
   };
 
   // Shows confirmation modal to remove a course from schedule
@@ -617,7 +620,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     setWinterSelectedCourses([]);
     setNumCourses(0);
     setEvents([]);
-    alert("Schedule cleared");
+    setShowScheduleConfirmation(false);
   };
 
   return (
@@ -883,7 +886,12 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
         </SubContainer>
       </Container>
       <ClearContainer>
-        <Button variant="danger" onClick={clearSchedule}>
+        <Button
+          variant="danger"
+          onClick={() => {
+            setShowScheduleConfirmation(true);
+          }}
+        >
           Clear Schedule
         </Button>
       </ClearContainer>
@@ -953,6 +961,21 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
             onClick={() => handleRemoveCourse(selectedRemoveCourse)}
           >
             Remove Course
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showScheduleConfirmation} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Clear Schedule</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to clear your schedule?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={clearSchedule}>
+            Clear
           </Button>
         </Modal.Footer>
       </Modal>
