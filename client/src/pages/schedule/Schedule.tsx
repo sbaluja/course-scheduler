@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, Component } from "react";
-import ReactToPrint from 'react-to-print';
 import { Layout } from "../../components/layout";
 import { CoursesContext } from "../../contexts/course-context";
 import {
@@ -640,8 +639,9 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
           </Dropdown.Menu>
         </Dropdown>
         <ExportContainer>
-        
-          <Button variant="danger" id="exportBtn" onClick={exportCourses}>Export</Button>
+          <Button variant="danger" id="exportBtn" onClick={exportCourses}>
+            Export
+          </Button>
         </ExportContainer>
       </SelectionContainer>
       <Container>

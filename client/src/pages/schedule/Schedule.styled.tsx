@@ -224,4 +224,7 @@ export const SelectionContainer = styled.div`
 export const ClearContainer = styled.div`
   display: flex;
   justify-content: center;
+  @media print {
+    display: none;
+  }
 `;
