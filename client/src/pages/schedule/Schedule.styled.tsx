@@ -7,6 +7,9 @@ export const Container = styled.div`
   align-items: center;
   gap: 1rem;
   padding-block: 2rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const Header = styled.h2`
@@ -30,6 +33,9 @@ export const FilterContainer = styled.div`
   border-radius: 2px;
   height: 26rem;
   width: 28rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const ButtonContainer = styled.div`
@@ -51,6 +57,9 @@ export const ExportContainer = styled.div`
   gap: 2rem;
   height: 2.3rem;
   width: 8rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const FormContainer = styled.div`
@@ -69,6 +78,9 @@ export const FormContainerOuter = styled.div`
   gap: 2rem;
   height: 10rem;
   width: 26rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const ActiveTimeContainer = styled.div`
@@ -78,6 +90,9 @@ export const ActiveTimeContainer = styled.div`
   justify-content: center;
   height: 10rem;
   width: 15rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const ActiveTimeContainerOuter = styled.div`
@@ -89,6 +104,9 @@ export const ActiveTimeContainerOuter = styled.div`
   width: 16rem;
   padding-block: 1rem;
   padding-top: 1rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const CreateTimeContainer = styled.div`
@@ -100,6 +118,9 @@ export const CreateTimeContainer = styled.div`
   width: 3rem;
   padding-block: 1rem;
   padding-right: 4rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const CreateTimeContainerOuter = styled.div`
@@ -111,6 +132,9 @@ export const CreateTimeContainerOuter = styled.div`
   height: 2rem;
   width: 24rem;
   padding-block: 1rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const SearchContainer = styled.div`
@@ -118,6 +142,9 @@ export const SearchContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media print {
+    display: none;
+  }
 `;
 
 export const SelectedCoursesContainer = styled.div`
@@ -125,10 +152,18 @@ export const SelectedCoursesContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media print {
+    display: none;
+  }
 `;
 
 export const CalendarContainer = styled.div`
   margin-inline: 7rem;
+  @media print {
+    justify-content: center;
+    align-items: center;
+    zoom: 40%;
+  }
 `;
 
 export const Input = styled.input`
@@ -146,6 +181,9 @@ export const RemoveContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media print {
+    display: none;
+  }
 `;
 
 export const RemovableCourse = styled.span`
@@ -178,4 +216,7 @@ export const SelectionContainer = styled.div`
   justify-content: center;
   padding-block: 2rem 1rem;
   padding-right: 20px;
+  @media print {
+    display: none;
+  }
 `;

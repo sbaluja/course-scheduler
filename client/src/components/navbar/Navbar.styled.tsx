@@ -9,6 +9,9 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   padding-top: 1.5rem;
+  @media print {
+    display: none;
+  }
 `;
 
 export const NavbarContainer = styled.div`
