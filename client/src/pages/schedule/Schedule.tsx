@@ -173,7 +173,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
 
     // filterCoursesByDay(excludedDays.length == 0 ? allDays : excludedDays);
 
-    // Add Years Excluded
+    // // Add Years Excluded
     const excludedYears = [];
     const allYears = [
       "First Year",
@@ -198,7 +198,19 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     }
     filterCoursesByYear(excludedYears.length == 0 ? allYears : excludedYears);
 
-    // filterCoursesByTime();
+    // Add Times Included
+    // const start_ul = document.getElementById("activeStartTimes");
+    // const end_ul = document.getElementById("activeEndTimes");
+    // const includedTimes = [];
+
+    // if (start_ul?.firstElementChild?.innerHTML != null && end_ul?.firstElementChild?.innerHTML != null) {
+    //   console.log("start time:" + start_ul.firstElementChild?.innerHTML);
+    //   console.log("end time:" + end_ul.firstElementChild?.innerHTML);
+    //   includedTimes.push(start_ul.firstElementChild?.innerHTML);
+    //   includedTimes.push(end_ul.firstElementChild?.innerHTML);
+    //   filterCoursesByTime(includedTimes);
+    // }
+
   };
 
   // Reset active filters list
@@ -228,6 +240,8 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     // Reset End Time
     const end_ul = document.getElementById("activeEndTimes");
     if (end_ul != null) end_ul.innerHTML = "";
+
+    // filterCoursesByTime("all times");
   };
 
   // Update active filters list
