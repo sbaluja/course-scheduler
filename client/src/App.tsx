@@ -5,6 +5,7 @@ import { CoursesContext } from "./contexts/course-context";
 import { ThemeProvider } from "styled-components";
 import { light, dark } from "./components/theme/Themes";
 import GlobalStyle from "./components/theme/globalStyles";
+import { CookiesProvider } from "react-cookie";
 
 // Pages
 import { Home } from "./pages/home";
@@ -20,7 +21,7 @@ const App = () => {
   const [error, setError] = useState<boolean>(false);
   const [filteredCourses, setFilteredCourses] = useState<CoursesType>([]);
   const [courseName, setCourseName] = useState("");
-  const [term, setTerm] = useState("winter");
+  const [term, setTerm] = useState("fall");
 
   // Pagination calculations
   const lastCourseIdx = currentPage * coursesPerPage;
@@ -47,26 +48,25 @@ const App = () => {
    * @returns boolean value if given time is between the start and end time
    */
   function checkTime(given: string, start: string, end: string) {
-    
     // Sample Time: "12:20PM"
-    let startTime = 0, endTime = 0, givenTime = 0;
+    let startTime = 0,
+      endTime = 0,
+      givenTime = 0;
 
     // Get given time in minutes
     if (given[5] == "P") givenTime += 12 * 60;
-    if ((given as string).substring(0,2) != "12"){
-      givenTime += parseInt((given as string).substring(0,2))*60;
+    if ((given as string).substring(0, 2) != "12") {
+      givenTime += parseInt((given as string).substring(0, 2)) * 60;
     }
-    givenTime += parseInt((given as string).substring(3,5));
-   
-    
+    givenTime += parseInt((given as string).substring(3, 5));
+
     // Get start time in minutes
     if (start[5] == "P" || start[6] == "P") startTime += 12 * 60;
     if ((start as string).substring(0,2) != "12"){
       startTime += parseInt((start as string).substring(0,2))*60;
     }
-    startTime += parseInt((start as string).substring(3,5));
-    
-    
+    startTime += parseInt((start as string).substring(3, 5));
+
     // Get end time in minutes
     if (end[5] == "P" || end[6] == "P") endTime += 12 * 60;
     if ((end as string).substring(0,2) != "12"){
@@ -234,44 +234,50 @@ const App = () => {
     <Router>
       <ThemeProvider theme={theme === "light" ? light : dark}>
         <GlobalStyle />
-        <CoursesContext.Provider
-          value={{
-            currentCourses,
-            coursesPerPage,
-            totalCourses,
-            currentPage,
-            paginate,
-            setCourses,
-            coursesLoading,
-            setCoursesLoading,
-            error,
-            setError,
-            filteredCourses,
-            filterCourses,
-            filterCoursesByDay,
-            filterCoursesByYear,
-            filterCoursesByTime,
-            courseName,
-            setCourseName,
-            term,
-            setTerm,
-          }}
-        >
-          <Routes>
-            <Route
-              path="/"
-              element={<Home themeType={theme} toggleTheme={toggleTheme} />}
-            />
-            <Route
-              path="/courses"
-              element={<Courses themeType={theme} toggleTheme={toggleTheme} />}
-            />
-            <Route
-              path="/schedule"
-              element={<Schedule themeType={theme} toggleTheme={toggleTheme} />}
-            />
-          </Routes>
-        </CoursesContext.Provider>
+        <CookiesProvider>
+          <CoursesContext.Provider
+            value={{
+              currentCourses,
+              coursesPerPage,
+              totalCourses,
+              currentPage,
+              paginate,
+              setCourses,
+              coursesLoading,
+              setCoursesLoading,
+              error,
+              setError,
+              filteredCourses,
+              filterCourses,
+              filterCoursesByDay,
+              filterCoursesByYear,
+              filterCoursesByTime,
+              courseName,
+              setCourseName,
+              term,
+              setTerm,
+            }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={<Home themeType={theme} toggleTheme={toggleTheme} />}
+              />
+              <Route
+                path="/courses"
+                element={
+                  <Courses themeType={theme} toggleTheme={toggleTheme} />
+                }
+              />
+              <Route
+                path="/schedule"
+                element={
+                  <Schedule themeType={theme} toggleTheme={toggleTheme} />
+                }
+              />
+            </Routes>
+          </CoursesContext.Provider>
+        </CookiesProvider>
       </ThemeProvider>
     </Router>
   );

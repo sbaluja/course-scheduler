@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, Component } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  createRef,
+  useRef,
+} from "react";
 import { Layout } from "../../components/layout";
 import { CoursesContext } from "../../contexts/course-context";
 import {
@@ -35,10 +41,13 @@ import { CourseType, CoursesType } from "../../utils/common_types";
 import { EventType } from "./Schedule.types";
 import { FiTrash2 } from "react-icons/fi";
 import { BsPlusCircle } from "react-icons/bs";
-import { ModalDialog } from "react-bootstrap";
 import { PageProps } from "../../types/common.types";
+import { useCookies } from "react-cookie";
 
 const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
+  // Calendar API
+  const calendarRef = useRef(null);
+
   // Course context
   const {
     filteredCourses,
@@ -53,6 +62,13 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   } = useContext(CoursesContext);
 
   // States
+  const localEvents: string = localStorage.getItem("events") ?? "[]";
+  const [cookies, setCookie] = useCookies([
+    "fallCourses",
+    "winterCourses",
+    "numCourses",
+    "events",
+  ]);
   const [show, setShow] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<CourseType>({
     Term: "",
@@ -66,16 +82,23 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     level: "",
   });
   const [fallSelectedCourses, setFallSelectedCourses] = useState<CoursesType>(
-    []
+    cookies?.fallCourses ?? []
   );
   const [winterSelectedCourses, setWinterSelectedCourses] =
-    useState<CoursesType>([]);
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [numCourses, setNumCourses] = useState<number>(0);
+    useState<CoursesType>(cookies?.winterCourses ?? []);
+  const [events, setEvents] = useState<EventType[]>(JSON.parse(localEvents));
+  const [numCourses, setNumCourses] = useState<number>(
+    parseInt(cookies?.numCourses) ?? 0
+  );
   const [showRemove, setShowRemove] = useState(false);
   const [showScheduleConfirmation, setShowScheduleConfirmation] =
     useState(false);
   const [selectedRemoveCourse, setSelectedRemoveCourse] = useState<string>("");
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(events));
+    setCookie("events", events);
+  }, [events]);
 
   // Variable declarations
   const colors = [
@@ -556,16 +579,28 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     ) {
       if (term === "winter") {
         setWinterSelectedCourses([...winterSelectedCourses, newCourse]);
+        setCookie("winterCourses", [...winterSelectedCourses, newCourse], {
+          path: "/schedule",
+        });
       } else {
         setFallSelectedCourses([...fallSelectedCourses, newCourse]);
+        setCookie("fallCourses", [...fallSelectedCourses, newCourse], {
+          path: "/schedule",
+        });
       }
       setShow(false);
       return;
     } else {
       if (term === "winter") {
         setWinterSelectedCourses([...winterSelectedCourses, newCourse]);
+        setCookie("winterCourses", [...winterSelectedCourses, newCourse], {
+          path: "/schedule",
+        });
       } else {
         setFallSelectedCourses([...fallSelectedCourses, newCourse]);
+        setCookie("fallCourses", [...fallSelectedCourses, newCourse], {
+          path: "/schedule",
+        });
       }
 
       if (lecText != "") {
@@ -581,6 +616,9 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
         addEvent(" Seminar", semStart, semText);
       }
       setNumCourses(numCourses + 1);
+      setCookie("numCourses", (parseInt(cookies.numCourses) + 1).toString(), {
+        path: "/schedule",
+      });
     }
     setShow(false);
   };
@@ -595,6 +633,9 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
           return course.name != courseName;
         });
         setFallSelectedCourses(updatedCourses);
+        setCookie("fallCourses", updatedCourses, {
+          path: "/schedule",
+        });
       }
     } else {
       if (winterSelectedCourses != undefined) {
@@ -602,6 +643,9 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
           return course.name != courseName;
         });
         setWinterSelectedCourses(updatedCourses);
+        setCookie("winterCourses", updatedCourses, {
+          path: "/schedule",
+        });
       }
     }
 
@@ -622,9 +666,19 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
 
   const clearSchedule = () => {
     setFallSelectedCourses([]);
+    setCookie("fallCourses", [], {
+      path: "/schedule",
+    });
     setWinterSelectedCourses([]);
+    setCookie("winterCourses", [], {
+      path: "/schedule",
+    });
     setNumCourses(0);
+    setCookie("numCourses", 0, {
+      path: "/schedule",
+    });
     setEvents([]);
+    localStorage.setItem("events", JSON.stringify("[]"));
     setShowScheduleConfirmation(false);
   };
 
@@ -904,6 +958,29 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
         className={themeType == "light" ? "dark" : "text-white"}
       >
         <FullCalendar
+          ref={calendarRef}
+          customButtons={{
+            FallButton: {
+              text: "Fall",
+              click: function () {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                calendarRef.current.getApi().gotoDate(new Date(2022, 8, 9));
+              },
+            },
+            WinterButton: {
+              text: "Winter",
+              click: function () {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                calendarRef.current.getApi().gotoDate(new Date(2023, 0, 1));
+              },
+            },
+          }}
+          headerToolbar={{
+            start: "title", // will normally be on the left. if RTL, will be on the right
+            end: "today FallButton WinterButton prev,next", // will normally be on the right. if RTL, will be on the left
+          }}
           plugins={[timeGridPlugin]}
           weekends={false}
           slotDuration="00:30"

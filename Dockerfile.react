@@ -1,0 +1,21 @@
+# pull official base image
+FROM node:19-alpine3.15
+
+# set working directory
+WORKDIR /client
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /client/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY /client/package.json ./
+COPY /client/package-lock.json ./
+RUN npm install --omit=dev
+RUN npm install react-scripts@3.4.1 -g
+
+# add app
+COPY /client/. ./
+
+# start app
+EXPOSE 3000
+CMD ["npm", "start"]
