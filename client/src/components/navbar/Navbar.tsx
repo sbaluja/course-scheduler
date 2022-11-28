@@ -33,12 +33,14 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
         "music"
       ) as HTMLAudioElement | null;
       if (musicElement) {
-        console.log("Loading music");
+        console.log("Loading music: " + event + "...");
         musicElement.pause();
-        musicElement.setAttribute("src", "music/" + event);
-        musicElement.load();
-        musicElement.play();
-        musicElement.volume = 0.1;
+        if (event !== "OFF") {
+          musicElement.setAttribute("src", "music/" + event);
+          musicElement.load();
+          musicElement.play();
+          musicElement.volume = 0.1;
+        }
       } else {
         console.log("Music element not found");
       }
@@ -48,7 +50,7 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
   return (
     <Container>
       <audio id="music" loop>
-        <source src="empty.mp3" type="audio/mpeg" />
+        <source type="audio/mpeg" />
       </audio>
       {width > 1024 ? (
         <NavbarContainer>
