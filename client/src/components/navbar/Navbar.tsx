@@ -38,7 +38,7 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
         musicElement.setAttribute("src", "music/" + event);
         musicElement.load();
         musicElement.play();
-        musicElement.volume = 0.2;
+        musicElement.volume = 0.1;
       } else {
         console.log("Music element not found");
       }
@@ -79,12 +79,12 @@ const Navbar: React.FC<NavProps> = ({ themeType, toggleTheme }) => {
 
               <Dropdown.Menu>
                 <Dropdown.Item eventKey="OFF">OFF</Dropdown.Item>
-                <Dropdown.Item eventKey="Ellinia.mp3">Ellinia</Dropdown.Item>
-                <Dropdown.Item eventKey="Henesys.mp3">Henesys</Dropdown.Item>
-                <Dropdown.Item eventKey="Kerning.mp3">Kerning</Dropdown.Item>
-                <Dropdown.Item eventKey="Dior.mp3">
-                  Dior - Pop Smoke
-                </Dropdown.Item>
+                <Dropdown.Item eventKey="Ellinia.mp3">MapleStory - Ellinia</Dropdown.Item>
+                <Dropdown.Item eventKey="Henesys.mp3">MapleStory - Henesys</Dropdown.Item>
+                <Dropdown.Item eventKey="Kerning.mp3">MapleStory - Kerning City</Dropdown.Item>
+                <Dropdown.Item eventKey="Dior.mp3">Dior - Pop Smoke</Dropdown.Item>
+                <Dropdown.Item eventKey="Mario.mp3">Super Mario Bros.</Dropdown.Item>
+                <Dropdown.Item eventKey="Wii.mp3">Wii Theme</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <List>
