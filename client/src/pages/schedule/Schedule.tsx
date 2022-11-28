@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  createRef,
+  useRef,
+} from "react";
 import { Layout } from "../../components/layout";
 import { CoursesContext } from "../../contexts/course-context";
 import {
@@ -39,6 +45,9 @@ import { PageProps } from "../../types/common.types";
 import { useCookies } from "react-cookie";
 
 const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
+  // Calendar API
+  const calendarRef = useRef(null);
+
   // Course context
   const {
     filteredCourses,
@@ -944,6 +953,29 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
         className={themeType == "light" ? "dark" : "text-white"}
       >
         <FullCalendar
+          ref={calendarRef}
+          customButtons={{
+            FallButton: {
+              text: "Fall",
+              click: function () {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                calendarRef.current.getApi().gotoDate(new Date(2022, 8, 9));
+              },
+            },
+            WinterButton: {
+              text: "Winter",
+              click: function () {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                calendarRef.current.getApi().gotoDate(new Date(2023, 0, 1));
+              },
+            },
+          }}
+          headerToolbar={{
+            start: "title", // will normally be on the left. if RTL, will be on the right
+            end: "today FallButton WinterButton prev,next", // will normally be on the right. if RTL, will be on the left
+          }}
           plugins={[timeGridPlugin]}
           weekends={false}
           slotDuration="00:30"
