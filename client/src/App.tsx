@@ -47,34 +47,39 @@ const App = () => {
    * @param end End time filter
    * @returns boolean value if given time is between the start and end time
    */
+  // 03:30PM - 04:20PM
+  // 8:00AM
+  // 11:00AM
   function checkTime(given: string, start: string, end: string) {
+    // console.log(given);
     // Sample Time: "12:20PM"
     let startTime = 0,
       endTime = 0,
       givenTime = 0;
 
     // Get given time in minutes
-    if (given[5] == "P") givenTime += 12 * 60;
-    if ((given as string).substring(0, 2) != "12") {
+    if (given[5] === "P") givenTime += 12 * 60;
+    if ((given as string).substring(0, 2) !== "12") {
       givenTime += parseInt((given as string).substring(0, 2)) * 60;
     }
     givenTime += parseInt((given as string).substring(3, 5));
 
     // Get start time in minutes
-    if (start[5] == "P" || start[6] == "P") startTime += 12 * 60;
-    if ((start as string).substring(0,2) != "12"){
-      startTime += parseInt((start as string).substring(0,2))*60;
+    if (start[5] === "P" || start[6] === "P") startTime += 12 * 60;
+    if ((start as string).substring(0, 2) !== "12") {
+      startTime += parseInt((start as string).substring(0, 2)) * 60;
     }
     startTime += parseInt((start as string).substring(3, 5));
 
     // Get end time in minutes
-    if (end[5] == "P" || end[6] == "P") endTime += 12 * 60;
-    if ((end as string).substring(0,2) != "12"){
-      endTime += parseInt((end as string).substring(0,2))*60;
+    if (end[5] === "P" || end[6] === "P") endTime += 12 * 60;
+    if ((end as string).substring(0, 2) !== "12") {
+      endTime += parseInt((end as string).substring(0, 2)) * 60;
     }
-    endTime += parseInt((end as string).substring(3,5));
-
-    return (startTime <= givenTime && givenTime <= endTime)? true : false;
+    endTime += parseInt((end as string).substring(3, 5));
+    console.log(startTime, endTime, givenTime);
+    // 8:00AM  <= 3:30PM         3:30PM <= 11:00AM
+    return startTime <= givenTime && givenTime <= endTime ? true : false;
   }
 
   // Filter searched courses
@@ -97,23 +102,26 @@ const App = () => {
         const result = course.meeting.match(regexp);
 
         if (result != null) {
+          console.log(query, result);
           for (let i = 0; i < result.length; i++) {
             if (result[i].includes("Mon") && !query.includes("Monday"))
               return false;
-            if (result[i].includes("Tues") && !query.includes("Tuesday"))
+            if (result[i].includes("Tues") && !query.includes("Tuesday")) {
               return false;
+            }
             if (result[i].includes("Wed") && !query.includes("Wednesday"))
               return false;
             if (result[i].includes("Thur") && !query.includes("Thursday"))
               return false;
-            if (result[i].includes("Fri") && !query.includes("Friday"))
+            if (result[i].includes("Fri") && !query.includes("Friday")) {
               return false;
+            }
           }
 
           return true;
         }
 
-        return true;
+        return false;
       })
     );
   };
@@ -153,44 +161,56 @@ const App = () => {
           return true;
         } else {
           // first regex pattern match to pull section, day, and time data from meeting string
-          const meeting_regexp = /([a-zA-Z]+( [a-zA-Z,]+)+)+\d{2}:\d{2}[A-Z]+ - \d{2}:\d{2}([A-Z]){2}/g;
+          /* eslint-disable no-useless-escape */
+          const meeting_regexp =
+            term === "fall"
+              ? /(?:[0-9-\/ ])+([a-zA-Z]+)( [a-zA-Z, ]+)((\d+:\d+)[A-Z -]+){2}/gm
+              : /([a-zA-Z]+( [a-zA-Z,]+)+)+\d{2}:\d{2}[A-Z]+ - \d{2}:\d{2}([A-Z]){2}/g; //eslint-disable-line
           const meetingResult = course.meeting.match(meeting_regexp);
-          
           // null result = courses with tba times, we aren't including those
           if (meetingResult) {
+            console.log(meetingResult.length);
             // second regex pattern match to pull only time data from previous match
             const time_regexp = /(\d+):(\d+)[A-Z]{2}/g;
-            
-            // for each of the results from the first match, perform the second pattern match 
+            // for each of the results from the first match, perform the second pattern match
             for (let i = 0; i < meetingResult.length; i++) {
-              const timeResult = String(meetingResult[i]).match(time_regexp);
-
-              // if the second pattern match returns results
-              if (timeResult) {
-                // check if it's valid 
-                if (timeResult.length != 2) {
-                  return false;
-                } else {
-                  // if it's valid, check time
-                  if (checkTime(timeResult[0], query[0], query[1]) && checkTime(timeResult[1], query[0], query[1])){
-                    // the course is only included if all time sections obey the filter
-                    if (i === meetingResult.length - 1) {
-                      // console.log(course.name + " reached");
-                      return true;
-                    } else {
-                      // continue looking through time sections
-                      continue;
-                    }
-                  } else {
+              if (!meetingResult[i].includes("EXAM")) {
+                const timeResult = String(meetingResult[i]).match(time_regexp);
+                console.log(timeResult);
+                // if the second pattern match returns results
+                if (timeResult) {
+                  // check if it's valid
+                  if (timeResult.length != 2) {
                     return false;
+                  } else {
+                    // if it's valid, check time
+                    if (
+                      // 03:30PM - 04:20PM
+                      // 8:00AM
+                      // 11:00AM
+                      checkTime(timeResult[0], query[0], query[1]) &&
+                      checkTime(timeResult[1], query[0], query[1])
+                    ) {
+                      // the course is only included if all time sections obey the filter
+                      // console.log(meetingResult.length);
+                      if (i === meetingResult.length - 1) {
+                        console.log(course.name + " reached");
+                        return true;
+                      } else {
+                        // continue looking through time sections
+                        return false;
+                      }
+                    } else {
+                      return false;
+                    }
                   }
+                } else {
+                  return false;
                 }
-              } else {
-                return false;
               }
             }
           } else {
-            return false;  
+            return false;
           }
           return false;
         }
@@ -248,6 +268,7 @@ const App = () => {
               error,
               setError,
               filteredCourses,
+              setFilteredCourses,
               filterCourses,
               filterCoursesByDay,
               filterCoursesByYear,
@@ -256,6 +277,7 @@ const App = () => {
               setCourseName,
               term,
               setTerm,
+              courses,
             }}
           >
             <Routes>

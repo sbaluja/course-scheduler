@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  createRef,
-  useRef,
-} from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Layout } from "../../components/layout";
 import { CoursesContext } from "../../contexts/course-context";
 import {
@@ -51,6 +45,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   // Course context
   const {
     filteredCourses,
+    setFilteredCourses,
     filterCourses,
     filterCoursesByDay,
     filterCoursesByTime,
@@ -59,7 +54,13 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     setCourseName,
     term,
     setTerm,
+    courses,
   } = useContext(CoursesContext);
+
+  useEffect(() => {
+    console.log(filteredCourses);
+    console.log(courses);
+  }, [filteredCourses]);
 
   // States
   const localEvents: string = localStorage.getItem("events") ?? "[]";
@@ -138,66 +139,61 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
   const handleFilters = () => {
     addFilters();
 
+    // Add Years Excluded
+    const excludedYears = [];
+    const allYears = [
+      "First Year",
+      "Second Year",
+      "Third Year",
+      "Fourth Year",
+      "Graduate",
+    ];
+    const yearToggles = document.getElementById("yearToggles");
+    if (yearToggles != null) {
+      const childElements = Object.values(
+        yearToggles.childNodes
+      ) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked) {
+          const year = childEl.children[0].getAttribute("name");
+          if (year != null) {
+            excludedYears.push(year);
+          }
+        }
+      }
+    }
+
+    filterCoursesByYear(excludedYears.length == 0 ? allYears : excludedYears);
+
     // Add Days Excluded
-    // const excludedDays = [];
-    // const allDays = [
-    //   "Monday",
-    //   "Tuesday",
-    //   "Wednesday",
-    //   "Thursday",
-    //   "Friday",
-    // ];
-    // const dayToggles = document.getElementById("dayToggles");
-    // if (dayToggles != null) {
-    //   const childElements = Object.values(
-    //     dayToggles.childNodes
-    //   ) as HTMLElement[];
-    //   for (const childEl of childElements) {
-    //     if ((childEl.children[0] as HTMLInputElement).checked) {
-    //       const day = childEl.children[0].getAttribute("name");
-    //       if (day != null) {
-    //         excludedDays.push(day);
-    //       }
-    //     }
-    //   }
-    // }
+    const excludedDays = [];
+    const allDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const dayToggles = document.getElementById("dayToggles");
+    if (dayToggles != null) {
+      const childElements = Object.values(
+        dayToggles.childNodes
+      ) as HTMLElement[];
+      for (const childEl of childElements) {
+        if ((childEl.children[0] as HTMLInputElement).checked) {
+          const day = childEl.children[0].getAttribute("name");
+          if (day != null) {
+            excludedDays.push(day);
+          }
+        }
+      }
+    }
 
-    // filterCoursesByDay(excludedDays.length == 0 ? allDays : excludedDays);
-
-
-    // // Add Years Excluded
-    // const excludedYears = [];
-    // const allYears = [
-    //   "First Year",
-    //   "Second Year",
-    //   "Third Year",
-    //   "Fourth Year",
-    //   "Graduate",
-    // ];
-    // const yearToggles = document.getElementById("yearToggles");
-    // if (yearToggles != null) {
-    //   const childElements = Object.values(
-    //     yearToggles.childNodes
-    //   ) as HTMLElement[];
-    //   for (const childEl of childElements) {
-    //     if ((childEl.children[0] as HTMLInputElement).checked) {
-    //       const year = childEl.children[0].getAttribute("name");
-    //       if (year != null) {
-    //         excludedYears.push(year);
-    //       }
-    //     }
-    //   }
-    // }
-
-    // filterCoursesByYear(excludedYears.length == 0 ? allYears : excludedYears);
-
+    filterCoursesByDay(excludedDays.length == 0 ? allDays : excludedDays);
 
     // Add Times Included
     const start_ul = document.getElementById("activeStartTimes");
     const end_ul = document.getElementById("activeEndTimes");
     const includedTimes = [];
 
-    if (start_ul?.firstElementChild?.innerHTML != null && end_ul?.firstElementChild?.innerHTML != null) {
+    if (
+      start_ul?.firstElementChild?.innerHTML != null &&
+      end_ul?.firstElementChild?.innerHTML != null
+    ) {
       // console.log("start time:" + start_ul.firstElementChild?.innerHTML);
       // console.log("end time:" + end_ul.firstElementChild?.innerHTML);
       includedTimes.push(start_ul.firstElementChild?.innerHTML);
@@ -208,6 +204,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
 
   // Reset active filters list
   const resetFilters = () => {
+    setFilteredCourses(courses);
     // Reset Days
     const dayList = document.getElementById("activeDayFilters");
     if (dayList != null) dayList.innerHTML = "";
@@ -235,7 +232,7 @@ const Schedule: React.FC<PageProps> = ({ themeType, toggleTheme }) => {
     if (end_ul != null) end_ul.innerHTML = "";
 
     const includedTimes = [];
-    includedTimes.push("all times")
+    includedTimes.push("all times");
     filterCoursesByTime(includedTimes);
   };
 

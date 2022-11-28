@@ -13,6 +13,7 @@ interface CoursesContextInterface {
     error: boolean;
     setError: any;
     filteredCourses: CoursesType;
+    setFilteredCourses: any;
     filterCourses: any;
     filterCoursesByDay: any;
     filterCoursesByYear: any;
@@ -21,6 +22,7 @@ interface CoursesContextInterface {
     setCourseName: any;
     term: string;
     setTerm: any;
+    courses: CoursesType;
 }
 
 const defaultCoursesContext: CoursesContextInterface = {
@@ -35,6 +37,7 @@ const defaultCoursesContext: CoursesContextInterface = {
     error: false,
     setError: null,
     filteredCourses: [],
+    setFilteredCourses: null,
     filterCourses: null,
     filterCoursesByDay: null,
     filterCoursesByYear: null,
@@ -43,6 +46,7 @@ const defaultCoursesContext: CoursesContextInterface = {
     setCourseName: null,
     term: "fall",
     setTerm: null,
+    courses: [],
 };
 
 export const CoursesContext = createContext<CoursesContextInterface>(
