@@ -40,7 +40,12 @@ const App = () => {
     setTheme(toggledTheme);
   };
 
-  // Helper fxn to determine if time is within a given time block
+  /**
+   * @param given Inputted course start or end time
+   * @param start Start time filter
+   * @param end End time filter
+   * @returns boolean value if given time is between the start and end time
+   */
   function checkTime(given: string, start: string, end: string) {
     
     // Sample Time: "12:20PM"
@@ -55,7 +60,7 @@ const App = () => {
    
     
     // Get start time in minutes
-    if (start[5] == "P") startTime += 12 * 60;
+    if (start[5] == "P" || start[6] == "P") startTime += 12 * 60;
     if ((start as string).substring(0,2) != "12"){
       startTime += parseInt((start as string).substring(0,2))*60;
     }
@@ -63,15 +68,13 @@ const App = () => {
     
     
     // Get end time in minutes
-    if (end[5] == "P") endTime += 12 * 60;
+    if (end[5] == "P" || end[6] == "P") endTime += 12 * 60;
     if ((end as string).substring(0,2) != "12"){
       endTime += parseInt((end as string).substring(0,2))*60;
     }
     endTime += parseInt((end as string).substring(3,5));
 
-
     return (startTime <= givenTime && givenTime <= endTime)? true : false;
-
   }
 
   // Filter searched courses
@@ -146,33 +149,51 @@ const App = () => {
   const filterCoursesByTime = (query: string[]) => {
     setFilteredCourses(
       courses.filter((course) => {
-
-        const meeting_regexp = /([a-zA-Z]+( [a-zA-Z,]+)+)+\d{2}:\d{2}[A-Z]+ - \d{2}:\d{2}([A-Z]){2}/g;
-        const meetingResult = course.meeting.match(meeting_regexp);
-        console.log("meetingResult " + meetingResult);
-        
-        // null result = courses with tba times, we aren't including those
-        if (meetingResult) {
-          const time_regexp = /(\d+):(\d+)[A-Z]{2}/g;
-          
-          for (let i = 0; i < meetingResult.length; i++) {
-            const timeResult = String(meetingResult[i]).match(time_regexp);
-            
-            if (timeResult) {
-              for (let j = 0; j < timeResult.length; j++) {
-                console.log("timeResult["+j+"]: " + timeResult);  
-
-
-              }
-            } else {
-              continue;
-            }
-          }
+        if (query[0] === "all times") {
+          return true;
         } else {
-          return false;  
-        }
+          // first regex pattern match to pull section, day, and time data from meeting string
+          const meeting_regexp = /([a-zA-Z]+( [a-zA-Z,]+)+)+\d{2}:\d{2}[A-Z]+ - \d{2}:\d{2}([A-Z]){2}/g;
+          const meetingResult = course.meeting.match(meeting_regexp);
+          
+          // null result = courses with tba times, we aren't including those
+          if (meetingResult) {
+            // second regex pattern match to pull only time data from previous match
+            const time_regexp = /(\d+):(\d+)[A-Z]{2}/g;
+            
+            // for each of the results from the first match, perform the second pattern match 
+            for (let i = 0; i < meetingResult.length; i++) {
+              const timeResult = String(meetingResult[i]).match(time_regexp);
 
-        return false;
+              // if the second pattern match returns results
+              if (timeResult) {
+                // check if it's valid 
+                if (timeResult.length != 2) {
+                  return false;
+                } else {
+                  // if it's valid, check time
+                  if (checkTime(timeResult[0], query[0], query[1]) && checkTime(timeResult[1], query[0], query[1])){
+                    // the course is only included if all time sections obey the filter
+                    if (i === meetingResult.length - 1) {
+                      // console.log(course.name + " reached");
+                      return true;
+                    } else {
+                      // continue looking through time sections
+                      continue;
+                    }
+                  } else {
+                    return false;
+                  }
+                }
+              } else {
+                return false;
+              }
+            }
+          } else {
+            return false;  
+          }
+          return false;
+        }
       })
     );
   };
