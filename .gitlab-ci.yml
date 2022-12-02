@@ -1,0 +1,43 @@
+eslint:
+  image: node
+  script:
+    - cd client
+    - npm i eslint
+    - npm run lint
+
+pylint:
+  image: "python:3.8"
+  before_script:
+    - python --version
+    - pip install pylint
+    - pip install flask
+    - pip install pytest
+  script:
+    - cd client/
+    - pylint server.py
+    - pylint ../test_server.py
+
+pytest:
+  image: "python:3.8"
+  before_script:
+    - python --version
+    - pip install pytest
+    - pip install flask
+  script:
+    pytest test_server.py -v
+
+deploy-prod:
+  stage: deploy
+  tags:
+    - deployment
+  script:
+    - cd client
+    - npm i
+    - CI='' npm run build
+    - sudo rm -rf /var/www/131.104.49.100/
+    - sudo mkdir /var/www/131.104.49.100/
+    - sudo mkdir /var/www/131.104.49.100/static
+    - sudo mkdir /var/www/131.104.49.100/music
+    - sudo mv -v build/* /var/www/131.104.49.100/
+    - sudo systemctl restart nginx
+  environment: production

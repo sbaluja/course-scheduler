@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "chrome": "^0.1.0",
+    "eslint": "^8.27.0",
+    "fullcalendar": "^5.11.3",
+    "jquery": "^3.6.1",
+    "selenium": "^2.20.0",
+    "selenium-webdriver": "^4.6.1"
+  },
+  "devDependencies": {
+    "chromedriver": "^107.0.3"
+  }
+}
