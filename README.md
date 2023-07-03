@@ -1,4 +1,4 @@
-# CIS*3760 Fall 2022 - Course Scheduler
+# Course Scheduler
 
 ## Installation
 
